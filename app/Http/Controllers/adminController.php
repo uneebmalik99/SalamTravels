@@ -19,6 +19,8 @@ use Facade\Ignition\Tabs\Tab;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 class adminController extends Controller
 {
@@ -28,40 +30,6 @@ class adminController extends Controller
     }
     public function index()
     {
-        /*$data['offlineticket'] = OfflineTicket::latest()->get();
-        foreach($data['offlineticket'] as $record){
-            $record->status = Status::find($record->status);
-            $record->user = User::find($record->user_id);
-            $record->customer = Customer::where('email',$record->user->email)->get();
-            $record->airline = Airline::where('id', $record->airline_name)->get();
-            $record->booking = Booking::where('id', $record->booking_source)->get();
-        }
-        $data['refund'] = Refund::latest()->get();
-        foreach($data['refund'] as $record){
-            $record->status = Status::find($record->status);
-            $record->user = User::find($record->user_id);
-            $record->customer = Customer::where('email',$record->user->email)->get();
-            $record->airline = Airline::where('id', $record->airline_name)->get();
-            $record->booking = Booking::where('id', $record->booking_source)->get();
-        }
-        $data['void'] = Voidtab::latest()->get();
-        foreach($data['void'] as $record){
-            $record->status = Status::find($record->status);
-            $record->user = User::find($record->user_id);
-            $record->customer = Customer::where('email',$record->user->email)->get();
-            $record->airline = Airline::where('id', $record->airline_name)->get();
-            $record->booking = Booking::where('id', $record->booking_source)->get();
-        }
-        $data['datechange'] = DateChange::latest()->get();
-        foreach($data['datechange'] as $record){
-            $record->status = Status::find($record->status);
-            $record->user = User::find($record->user_id);
-            $record->customer = Customer::where('email',$record->user->email)->get();
-            $record->airline = Airline::where('id', $record->airline_name)->get();
-            $record->booking = Booking::where('id', $record->booking_source)->get();
-        }
-        $data = collect($data)->sortBy('created_at')->all();
-        */
         $data = Tabinfo::latest('created_at')->get();
         foreach ($data as $record) {
             $record->all_airline = Airline::find($record->airline_id);
@@ -298,6 +266,7 @@ class adminController extends Controller
         $tabinfo = Tabinfo::find($id);
         $tabinfo->status_id = 6;
         $tabinfo->update();
+        $this->SendStatusMail($tabinfo);
         return back()->with(['success' => 'ticket status is Posted']);
     }
     public function ticketingProcessing($id)
@@ -308,6 +277,7 @@ class adminController extends Controller
         $tabinfo = Tabinfo::find($id);
         $tabinfo->status_id = 1;
         $tabinfo->update();
+        $this->SendStatusMail($tabinfo);
         return back()->with(['success' => 'ticket status is Processing']);
     }
     public function ticketingCompleted($id)
@@ -318,6 +288,7 @@ class adminController extends Controller
         $tabinfo = Tabinfo::find($id);
         $tabinfo->status_id = 7;
         $tabinfo->update();
+        $this->SendStatusMail($tabinfo);
         return back()->with(['success' => 'ticket status is Completed']);
     }
     public function ticketingRejected($id)
@@ -328,6 +299,7 @@ class adminController extends Controller
         $tabinfo = Tabinfo::find($id);
         $tabinfo->status_id = 4;
         $tabinfo->update();
+        $this->SendStatusMail($tabinfo);
         return back()->with(['success' => 'ticket status is Rejected']);
     }
     public function refundSubmitted($id)
@@ -348,6 +320,7 @@ class adminController extends Controller
         $tabinfo = Tabinfo::find($id);
         $tabinfo->status_id = 6;
         $tabinfo->update();
+        $this->SendStatusMail($tabinfo);
         return back()->with(['success' => 'Refund status is Posted']);
     }
     public function refundProcessing($id)
@@ -358,6 +331,7 @@ class adminController extends Controller
         $tabinfo = Tabinfo::find($id);
         $tabinfo->status_id = 1;
         $tabinfo->update();
+        $this->SendStatusMail($tabinfo);
         return back()->with(['success' => 'Refund status is Processing']);
     }
     public function refundCompleted($id)
@@ -368,6 +342,7 @@ class adminController extends Controller
         $tabinfo = Tabinfo::find($id);
         $tabinfo->status_id = 7;
         $tabinfo->update();
+        $this->SendStatusMail($tabinfo);
         return back()->with(['success' => 'Refund status is Completed']);
     }
     public function refundRejected($id)
@@ -378,6 +353,7 @@ class adminController extends Controller
         $tabinfo = Tabinfo::find($id);
         $tabinfo->status_id = 4;
         $tabinfo->update();
+        $this->SendStatusMail($tabinfo);
         return back()->with(['success' => 'Refund status is Rejected']);
     }
     public function voidSubmitted($id)
@@ -398,6 +374,7 @@ class adminController extends Controller
         $tabinfo = Tabinfo::find($id);
         $tabinfo->status_id = 6;
         $tabinfo->update();
+        $this->SendStatusMail($tabinfo);
         return back()->with(['success' => 'Void status is Posted']);
     }
     public function voidProcessing($id)
@@ -408,6 +385,7 @@ class adminController extends Controller
         $tabinfo = Tabinfo::find($id);
         $tabinfo->status_id = 1;
         $tabinfo->update();
+        $this->SendStatusMail($tabinfo);
         return back()->with(['success' => 'Void status is Processing']);
     }
     public function voidCompleted($id)
@@ -418,6 +396,7 @@ class adminController extends Controller
         $tabinfo = Tabinfo::find($id);
         $tabinfo->status_id = 7;
         $tabinfo->update();
+        $this->SendStatusMail($tabinfo);
         return back()->with(['success' => 'Void status is Completed']);
     }
     public function voidRejected($id)
@@ -428,6 +407,7 @@ class adminController extends Controller
         $tabinfo = Tabinfo::find($id);
         $tabinfo->status_id = 4;
         $tabinfo->update();
+        $this->SendStatusMail($tabinfo);
         return back()->with(['success' => 'Void status is Rejected']);
     }
     public function dateChangeSubmitted($id)
@@ -448,6 +428,7 @@ class adminController extends Controller
         $tabinfo = Tabinfo::find($id);
         $tabinfo->status_id = 6;
         $tabinfo->update();
+        $this->SendStatusMail($tabinfo);
         return back()->with(['success' => 'DateChange status is Posted']);
     }
     public function dateChangeProcessing($id)
@@ -458,6 +439,7 @@ class adminController extends Controller
         $tabinfo = Tabinfo::find($id);
         $tabinfo->status_id = 1;
         $tabinfo->update();
+        $this->SendStatusMail($tabinfo);
         return back()->with(['success' => 'DateChange status is Processing']);
     }
     public function dateChangeCompleted($id)
@@ -468,6 +450,7 @@ class adminController extends Controller
         $tabinfo = Tabinfo::find($id);
         $tabinfo->status_id = 7;
         $tabinfo->update();
+        $this->SendStatusMail($tabinfo);
         return back()->with(['success' => 'DateChange status is Completed']);
     }
     public function dateChangeRejected($id)
@@ -478,6 +461,7 @@ class adminController extends Controller
         $tabinfo = Tabinfo::find($id);
         $tabinfo->status_id = 4;
         $tabinfo->update();
+        $this->SendStatusMail($tabinfo);
         return back()->with(['success' => 'DateChange status is Rejected']);
     }
     public function paymentSubmitted($id)
@@ -485,6 +469,7 @@ class adminController extends Controller
         $payment = Payment::find($id);
         $payment->status = 5;
         $payment->update();
+        //$this->SendpaymentStatus($payment);
         return back()->with(['success' => 'Payment status is submitted']);
     }
     public function paymentPosted($id)
@@ -492,6 +477,7 @@ class adminController extends Controller
         $payment = Payment::find($id);
         $payment->status = 6;
         $payment->update();
+        $this->SendpaymentStatus($payment);
         return back()->with(['success' => 'Payment status is Posted']);
     }
     public function paymentProcessing($id)
@@ -499,6 +485,7 @@ class adminController extends Controller
         $payment = Payment::find($id);
         $payment->status = 1;
         $payment->update();
+        $this->SendpaymentStatus($payment);
         return back()->with(['success' => 'Payment status is Processing']);
     }
     public function paymentCompleted($id)
@@ -506,6 +493,7 @@ class adminController extends Controller
         $payment = Payment::find($id);
         $payment->status = 7;
         $payment->update();
+        $this->SendpaymentStatus($payment);
         return back()->with(['success' => 'Payment status is Completed']);
     }
     public function paymentRejected($id)
@@ -513,6 +501,7 @@ class adminController extends Controller
         $payment = Payment::find($id);
         $payment->status = 4;
         $payment->update();
+        $this->SendpaymentStatus($payment);
         return back()->with(['success' => 'Payment status is Rejected']);
     }
     public function adminTicketingStatus(Request $request, $id)
@@ -671,5 +660,162 @@ class adminController extends Controller
         $Bank->enable = 0;
         $Bank->update();
         return back()->with(['success' => 'Bank Disabled']);
+    }
+    public function SendStatusMail(Tabinfo $tabinfo)
+    {
+        $user = $tabinfo->user()->first();
+        $customer = Customer::where('email', $user->email)->first();
+        $booking_source = Booking::find($tabinfo->booking_source_id);
+        $airline = Airline::find($tabinfo->airline_id);
+        $msg = '';
+        $subject = '';
+        if ($tabinfo->tabtype_id == 1) {
+            $subject = 'TICKETING';
+            if ($tabinfo->status_id == 1) {
+                $msg = 'YOUR ' . '"' . 'TICKETING' . '"' . ' REQUEST IS PROCESSING BY OUR TEAM.';
+            } else if ($tabinfo->status_id == 7) {
+                $msg = 'YOUR ' . '"' . 'TICKETING' . '"' . ' REQUEST IS COMPLETED.';
+            } else if ($tabinfo->status_id == 4) {
+                $msg = 'YOUR ' . '"' . 'TICKETING' . '"' . ' REQUEST IS REJECTED BY OUR TEAM.';
+            } else if ($tabinfo->status_id == 6) {
+                $msg = 'YOUR ' . '"' . 'TICKETING' . '"' . ' REQUEST IS POSTED.';
+            }
+        } else if ($tabinfo->tabtype_id == 2) {
+            $subject = 'REFUND';
+            if ($tabinfo->status_id == 1) {
+                $msg = 'YOUR ' . '"' . 'REFUND' . '"' . ' REQUEST IS PROCESSING BY OUR TEAM.';
+            } else if ($tabinfo->status_id == 7) {
+                $msg = 'YOUR ' . '"' . 'REFUND' . '"' . ' REQUEST IS COMPLETED.';
+            } else if ($tabinfo->status_id == 4) {
+                $msg = 'YOUR ' . '"' . 'REFUND' . '"' . ' REQUEST IS REJECTED BY OUR TEAM.';
+            } else if ($tabinfo->status_id == 6) {
+                $msg = 'YOUR ' . '"' . 'REFUND' . '"' . ' REQUEST IS POSTED.';
+            }
+        } else if ($tabinfo->tabtype_id == 3) {
+            $subject = 'VOID';
+            if ($tabinfo->status_id == 1) {
+                $msg = 'YOUR ' . '"' . 'VOID' . '"' . ' REQUEST IS PROCESSING BY OUR TEAM.';
+            } else if ($tabinfo->status_id == 7) {
+                $msg = 'YOUR ' . '"' . 'VOID' . '"' . ' REQUEST IS COMPLETED.';
+            } else if ($tabinfo->status_id == 4) {
+                $msg = 'YOUR ' . '"' . 'VOID' . '"' . ' REQUEST IS REJECTED BY OUR TEAM.';
+            } else if ($tabinfo->status_id == 6) {
+                $msg = 'YOUR ' . '"' . 'VOID' . '"' . ' REQUEST IS POSTED.';
+            }
+        } else if ($tabinfo->tabtype_id == 4) {
+            $subject = 'DATE CHANGE';
+            if ($tabinfo->status_id == 1) {
+                $msg = 'YOUR ' . '"' . 'DATE CHANGE' . '"' . ' REQUEST IS PROCESSING BY OUR TEAM.';
+            } else if ($tabinfo->status_id == 7) {
+                $msg = 'YOUR ' . '"' . 'DATE CHANGE' . '"' . ' REQUEST IS COMPLETED.';
+            } else if ($tabinfo->status_id == 4) {
+                $msg = 'YOUR ' . '"' . 'DATE CHANGE' . '"' . ' REQUEST IS REJECTED BY OUR TEAM.';
+            } else if ($tabinfo->status_id == 6) {
+                $msg = 'YOUR ' . '"' . 'DATE CHANGE' . '"' . ' REQUEST IS POSTED.';
+            }
+        }
+        // dd($msg);
+        require base_path('vendor/autoload.php');
+        //require ('../vendor/autoload.php');
+        $mail = new PHPMailer(true);
+
+        $mail->SMTPDebug = 0;
+        $mail->isSMTP();
+        $mail->Host = 'mail.salamtravels.com.pk';
+        // $mail->Host = 'awanwoodworkshop.store';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'admin@salamtravels.com.pk';
+        $mail->Password = 'Salam7879';
+        $mail->SMTPSecure = 'ssl';
+        $mail->SMTPAuth = true;
+        $mail->Port = 465;
+        $mail->setFrom('admin@salamtravels.com.pk', 'Salam Travels and Tours');
+        $mail->isHTML(true);
+
+        $mail->Subject = 'SALAM WEB PORTAL ' . $subject . ' REQUEST';
+        $mail->Body = '<p>Dear Trade Partner</p><br>
+            ' . $customer->agency_name . '<br>
+            <p>' . $msg . '</p><br><br>
+            <p>PLEASE SEE ITS DETAILS</p><br>
+            PNR:&nbsp;&nbsp;' . $tabinfo->pnr . '<br>
+            BOOKING SOURCE:&nbsp;&nbsp;' . $tabinfo->booking_source->booking_source . '<br>
+            AIRLINE:&nbsp;&nbsp;' . $tabinfo->airline->airline_name . '<br>
+            SECTOR:&nbsp;&nbsp;' . $tabinfo->sector . '<br>
+            TRAVEL DATE:&nbsp;&nbsp;' . $tabinfo->date . '<br>
+            PESSENGER NAME:&nbsp;&nbsp;' . $tabinfo->passenger_name . '<br><br>
+            KINDLY VIEW ITS CURRENT STATUS IN PORTAL.<br><br>
+
+            REGARDS<br>
+            TEAM <br>
+            SALAM TRAVEL & TOURS';
+        $data = [$customer->email, 'salamair7879@gmail.com'];
+        for ($i = 0; $i < 2; $i++) {
+            try {
+                $mail->addAddress($data[$i]);
+                $mail->send();
+                $mail->clearAddresses();
+            } catch (Exception $x) {
+                return back()->with(['success' => 'email could not sent']);
+            }
+        }
+    }
+    public function SendpaymentStatus(Payment $payment)
+    {
+        $msg = '';
+        $subject = 'PAYMENT';
+        if ($payment->status == 1) {
+            $msg = 'YOUR ' . '"' . 'PAYMENT' . '"' . ' REQUEST IS PROCESSING BY OUR TEAM.';
+        } else if ($payment->status == 7) {
+            $msg = 'YOUR ' . '"' . 'PAYMENT' . '"' . ' REQUEST IS COMPLETED.';
+        } else if ($payment->status == 4) {
+            $msg = 'YOUR ' . '"' . 'PAYMENT' . '"' . ' REQUEST IS REJECTED BY OUR TEAM.';
+        } else if ($payment->status == 6) {
+            $msg = 'YOUR ' . '"' . 'PAYMENT' . '"' . ' REQUEST IS POSTED.';
+        } else {
+            return back();
+        }
+        $customer = $payment->user()->first();
+        $bank = $payment->bank()->first();
+        // dd($customer);
+        require base_path('vendor/autoload.php');
+        //require ('../vendor/autoload.php');
+        $mail = new PHPMailer(true);
+
+        $mail->SMTPDebug = 0;
+        $mail->isSMTP();
+        $mail->Host = 'mail.salamtravels.com.pk';
+        // $mail->Host = 'awanwoodworkshop.store';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'admin@salamtravels.com.pk';
+        $mail->Password = 'Salam7879';
+        $mail->SMTPSecure = 'ssl';
+        $mail->SMTPAuth = true;
+        $mail->Port = 465;
+        $mail->setFrom('admin@salamtravels.com.pk', 'Salam Travels and Tours');
+        $mail->isHTML(true);
+
+        $mail->Subject = 'SALAM WEB PORTAL ' . $subject . ' REQUEST';
+        $mail->Body = '<p>Dear Trade Partner</p><br>
+            ' . $customer->agency_name . '<br>
+            <p>' . $msg . '</p><br><br>
+            <p>PLEASE SEE ITS DETAILS</p><br>
+            AMOUNT:&nbsp;&nbsp;' . $payment->amount . '<br>
+            BANK NAME SOURCE:&nbsp;&nbsp;' . $bank->bank_name . '<br>
+            PAYMENT DATE:&nbsp;&nbsp;' . $payment->payment_date . '<br>
+            KINDLY VIEW ITS CURRENT STATUS IN PORTAL.<br><br>
+
+            REGARDS<br>
+            TEAM <br>
+            SALAM TRAVEL & TOURS';
+        $data = [$customer->email, 'salamair7879@gmail.com'];
+        for ($i = 0; $i < 2; $i++) {
+            try {
+                $mail->addAddress($data[$i]);
+                $mail->send();
+                $mail->clearAddresses();
+            } catch (Exception $x) {
+                return back()->with(['success' => 'email could not sent']);
+            }
+        }
     }
 }

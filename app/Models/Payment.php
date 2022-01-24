@@ -12,4 +12,12 @@ class Payment extends Model
     protected $fillable = [
         'amount', 'bank', 'payment_date', 'payment_proof', 'remarks', 'user_id'
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+    public function bank()
+    {
+        return $this->belongsTo(Bank::class, 'bank');
+    }
 }
