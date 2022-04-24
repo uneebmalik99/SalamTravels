@@ -1,0 +1,594 @@
+@import url('../../../f12jgx.webtracker.wisegrid.net/DefaultStyle.css');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&amp;display=swap');
+
+body {
+    background-image: url('../images/bg-image.jpg'); 
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Open Sans', sans-serif;
+    padding: 130px 0;
+    font-size: 14px;
+    position: relative;
+    height: 100vh;
+}
+
+body.ZFilterPage, body.ZIFramePage {
+    background-image: none;
+    background-color: #f3f3f3;
+    padding: 0;
+}
+
+html, body, table, td, th, h1, h2, h3, h4, h5, h6, p, a, span, div, pre, input, textarea, select {
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+#pagehead {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);    
+}
+
+#pagehead, #topbar1, #topbar2 {
+    height: auto;
+    border: none;
+    background-color: transparent;  
+    background-image: none;
+}
+
+#topbar2 {
+    display: flex;
+    justify-content: center;
+}
+
+#topbar2 .LogoImage {
+    background-image: url(https://static.wisharemediacdn.com/images/freightright-logo-slogan.svg);
+    width: 200px;
+    height: 100px;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+}
+
+#topbar2 .LogoImage img { display: none; }
+
+#LoginInstructionContent { display: none; }
+
+#OuterContentPane {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+}
+
+#OuterContentPane br {
+    display: none;
+}
+
+#OuterContentPane .loginBox {
+    border: none;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.4);
+    padding: 30px 20px;
+    font-size: 16px;
+    font-weight: normal;
+    color: #4d5d6b;
+    width: 450px;   
+    left: 0;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+#OuterContentPane .loginBox input[type="text"], 
+#OuterContentPane .loginBox input[type="password"],
+#OuterContentPane #SetPasswordHeadingLabel input[type="text"],
+#OuterContentPane #setTable input[type="text"],
+#OuterContentPane #PasswordChangeMessage input[type="text"], 
+#OuterContentPane #SetPasswordHeadingLabel input[type="password"],
+#OuterContentPane #setTable input[type="password"],
+#OuterContentPane #PasswordChangeMessage input[type="password"]
+{
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    border-bottom: 1px solid #a1a1a2;
+    padding: 10px 0;
+    font-size: 18px;
+    color: #4d5d6b; 
+    margin-bottom: 18px;
+    margin-top: 6px;
+}
+
+#OuterContentPane .loginBox input[type="submit"],
+#OuterContentPane #SetPasswordHeadingLabel input[type="submit"],
+#OuterContentPane #setTable input[type="submit"],
+#OuterContentPane #PasswordChangeMessage input[type="submit"]
+{
+    width: 100%;
+    border: none;
+    color: #fff;
+    background-color: #0ba1cc;
+    font-size: 20px;
+    border-radius: 6px;
+    padding: 20px 0;    
+    margin-top: 20px;
+}
+
+#OuterContentPane .loginBox input[type="text"]:focus,
+#OuterContentPane #SetPasswordHeadingLabel input[type="text"]:focus,
+#OuterContentPane #setTable input[type="text"]:focus,
+#OuterContentPane #PasswordChangeMessage input[type="text"]:focus
+{
+    outline: none;
+}
+
+#ViewShipmentDetails {
+    text-align: center;
+}
+
+#ViewShipmentDetails input[type="text"] {
+    margin-top: 18px;
+    text-align: center;
+}
+
+#QuickViewDetails input[type="submit"] {
+    margin-top: 10px;
+}
+
+#PasswordReminder {
+    position: absolute;
+    bottom: 140px;
+    background-color: transparent;
+    right: 20px;
+    font-size: 0;
+    width: 130px;
+}
+
+#PasswordReminder:before {
+    content: "Forgot Password?";
+    color: #4d5d6b;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 14px;    
+}
+
+#PageFooter {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: 14px;
+    color: #fff;
+    height: auto;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    background-color: transparent;  
+}
+
+#PageFooter span {
+    display: none;
+}
+
+#PageFooter:after {
+    content: "\00a9 Freight Right Global Logistics";
+    font-size: 18px;
+    color: #fff;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;   
+}
+
+#PageFooter:before {
+    content: 'Phone: 1-877-909-7447';
+    color: #fff;
+    font-size: 18px;
+    position: absolute;
+    bottom: 20px;
+    left: 20px; 
+}
+
+#ZCheckBox1 {
+    position: absolute;
+    opacity: 0;
+}
+
+#ZCheckBox1 + label {
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+}
+
+#ZCheckBox1 + label:before {
+    content: '';
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: text-top;
+    width: 20px;
+    height: 20px;
+    background: white;
+}
+
+#ZCheckBox1:hover + label:before {
+    background: #0ba1cc;
+}
+
+#ZCheckBox1:focus + label:before {
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
+}
+
+#ZCheckBox1:checked + label:before {
+    background: #0ba1cc;
+}
+
+#ZCheckBox1:disabled + label {
+    color: #b8b8b8;
+    cursor: auto;
+}
+
+#ZCheckBox1:disabled + label:before {
+    box-shadow: none;
+    background: #ddd;
+}
+
+#ZCheckBox1:checked + label:after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 9px;
+    background: white;
+    width: 2px;
+    height: 2px;
+    box-shadow: 2px 0 0 white, 4px 0 0 white, 4px -2px 0 white, 4px -4px 0 white, 4px -6px 0 white, 4px -8px 0 white;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+/** Tracking Page */
+#Title {
+    background-color: #fff;
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 20px;    
+}
+
+.DetailsHeader {
+    color: #fff;
+}
+
+.DetailsHeader td {
+    background-color: #0b91ca;  
+}
+
+.DetailsHeader td a {
+    color: #fff;
+}
+
+.DetailsCell a, .DetailsAlternatingCell a {
+    color: #0474a3;
+}
+
+#AuthorisedContent {
+    background-color: #fff;
+    padding: 0 20px 40px 20px;
+    line-height: 30px;  
+    min-width: 1000px;
+}
+
+.DataGridController {
+    margin: 10px 0;
+}
+
+.DetailsTable td {
+    padding: 4px 6px;
+}
+
+#ctl04_menu {
+    background-color: #35a9da;  
+}
+
+/** Logged In UI */
+#menu {
+    left: auto;
+    top: auto;
+    background-color: #28a8dd;
+    min-width: 1000px;  
+    display: flex;
+    position: relative;   
+    list-style: none; 
+    padding: 0;
+}
+
+#menu > li {
+    width: auto;
+    flex: 1;
+    padding: 20px 10px 20px 20px;
+    background: none;
+    background-color: #28a8dd;
+    border: none;
+    position: relative;
+}
+
+#menu ul {
+    position: absolute;
+    z-index: 1000;
+    top: initial !important;
+    bottom: 0;
+    left: 0;
+    transform: translateY(100%);
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display: none;
+    list-style: none;
+}
+
+#menu > li > ul > li {
+    padding: 20px 10px 20px 20px;
+    float: none;
+    background: none;
+    background-color: #28a8dd;
+    text-align: left;
+    width: auto;
+    height: auto;
+    position: relative;
+    z-index: 100;    
+    border: none;
+    color: #c8ea26;
+}
+
+#menu > li > ul > li:hover {
+    background-color: #92d1eb;
+}
+
+#menu > li > a {
+    font-weight: bold;
+}
+
+#menu li {
+    cursor: pointer;
+}
+
+#menu li a {
+    background: none !important;
+    color: #fff !important;
+    text-decoration: none;
+}
+
+#menu li a:hover, #menu li a:visited, #menu li a:active {
+    color: #fff !important;
+} 
+
+#menuIFrame {
+    display: none;
+}
+
+#LoginStatusString {
+    position: relative;
+    top: auto;
+    right: auto;
+    background-color: #fff;
+    padding: 10px 20px;
+    text-align: left;   
+}
+
+#SearchControlHolder { position: relative; }
+
+#SearchControlHolder select {
+    min-width: 120px;
+    margin-right: 4px;
+}
+
+#SearchControlHolder select, #SearchControlHolder input[type="text"] {
+    width: 100% !important;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    height: 30px;
+    border-radius: 6px; 
+    border: 1px solid #ccc;
+     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;    
+}
+
+#SearchControlHolder select:focus, #SearchControlHolder input[type="text"]:focus {
+    outline: none !important;
+    border-color: #414141;  
+}
+
+#SearchControlHolder td {
+    padding: 10px;
+    position: relative;
+}
+
+#SearchControlHolder td tr {
+    display: flex;
+}
+
+#SearchControlHolder td td {
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: auto;
+}
+
+#SearchControlHolder tr td:last-child {
+    width: 100px;
+}
+
+#SearchControlHolder td span {
+    font-size: 14px !important; 
+}
+
+#SearchControlHolder td td span {
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-start;
+    width: auto !important;
+    height: auto !important;    
+}
+
+#SearchControlHolder td td span input[type="text"] {
+    width: 100px !important;
+}
+
+#SearchControlHolder td td span input[type="button"] {
+    width: 30px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    height: 30px !important;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;  
+    margin-left: 2px;
+}
+
+#SearchControlHolder td td > span:first-child {
+    margin-right: 6px;  
+}
+
+#SearchControlHolder .Button, 
+#SearchControlHolder .FilterStripGroup_none,
+#SearchControlHolder .FilterStripGroup_red,
+#SearchControlHolder .FilterStripGroup_green,
+#SearchControlHolder .FilterStripGroup_blue,
+#SearchControlHolder .FilterStripGroup_brown,
+#SearchControlHolder .FilterStripGroup_grey,
+input[value="Export to Excel"], 
+input[value="Customize Columns"],
+.CustomizeColumnsButtons
+{
+    font-size: 13px;
+    line-height: 1.42857143;
+    height: 30px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    margin: 2px 4px 2px 0;
+    float: none !important; 
+    box-sizing: content-box;
+    padding: 4px 0;    
+}
+
+#SearchControlHolder .FilterStripGroup_none,
+#SearchControlHolder .FilterStripGroup_red,
+#SearchControlHolder .FilterStripGroup_green,
+#SearchControlHolder .FilterStripGroup_blue,
+#SearchControlHolder .FilterStripGroup_brown,
+#SearchControlHolder .FilterStripGroup_grey
+{
+    font-size: 10px;
+    padding-top: 4px;
+}
+
+#SearchControlHolder .FilterStripGroup_red { color: #e37c84; }
+#SearchControlHolder .FilterStripGroup_green { color: #9cdc94; }
+#SearchControlHolder .FilterStripGroup_blue { color: #8ab1dd; }
+#SearchControlHolder .FilterStripGroup_brown { color: #ddae87; }
+#SearchControlHolder .FilterStripGroup_grey { color: #a9a9a9; }
+
+#SearchControlHolder input[value=" Find "] {
+    position: absolute;
+    top: 10px;
+    right: 0;
+}
+
+.Button[value="Manage Layouts"], 
+.Button[value="Save Layout"], 
+.Button[value="Reset Layout"], 
+.Button[value=" Find "],
+input[value="Export to Excel"], 
+input[value="Customize Columns"],
+.CustomizeColumnsButtons
+{
+    border: none !important;
+    color: #fff;
+    background-color: #0ba1cc;    
+}
+
+input[value="Export to Excel"], 
+input[value="Customize Columns"],
+.CustomizeColumnsButtons
+{
+    padding-left: 20px;
+    padding-right: 20px;    
+}
+
+a#ctl07_ctl01_HelpHyperlink {
+position: absolute;
+    top: -10px;
+    left: 10px;
+}
+
+.NewButton {
+    width: 100%;
+    border: none;
+    color: #fff;
+    background-color: #0ba1cc;
+    font-size: 20px !important;
+    border-radius: 6px;
+    padding: 20px 0 !important; 
+    height: auto !important;    
+}
+
+/** iframe */
+.ZFindBox {
+    top: auto !important;
+    left: auto !important;
+    bottom: 0;
+    z-index: 200;
+    position: absolute;
+    transform: translateY(100%);    
+    border-radius: 6px;
+    background-color: #ccc;
+    padding: 6px;    
+}
+
+#OuterContentPane #SetPasswordHeadingLabel {
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+}
+
+#OuterContentPane #SetPasswordHeadingLabel,
+#OuterContentPane #setTable,
+#OuterContentPane #PasswordChangeMessage 
+{
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px 20px;
+    width: 450px;
+}
+
+#OuterContentPane input#Update {
+    font-size: 16px !important;
+    margin: 0;
+    padding: 10px 20px !important;
+    width: auto !important;
+}
+
+#OuterContentPane #PasswordChangeMessage {
+    padding: 10px 20px; 
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+}

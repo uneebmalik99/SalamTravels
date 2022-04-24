@@ -1,0 +1,20 @@
+p.type => dropdown
+values => fixed, commision, discount
+
+fixed => basic, tax, discount should freeze
+
+commision => nothing to freeze
+
+discount => nothing to freeze
+
+
+next block => vendor => dropdown
+
+add vendor page like booking source and airline
+
+on action when select next action freeze privious all => for sub admin
+when select completed on action (rejected, submit, processing) freeze => for sub admin
+
+when select rejected on action then all action will be freeze  => for sub admin
+
+when select posted all freeze  => for sub admin
