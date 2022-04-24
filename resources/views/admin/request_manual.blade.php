@@ -161,7 +161,7 @@
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   document.getElementById('logout-form').submit();">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
 
@@ -176,125 +176,113 @@
                     </div>
                 </div>
             </nav>
-            <!-- End Navbar --> 
+            <!-- End Navbar -->
             {{-- new form submit request start here --}}
             <div class="content">
-                <div class="row">
-                    <div class="col-6">
-                        <div class="float-left">
-                            {{-- <h4 class="card-title">Dashboard</h4> --}}
-                        </div>
-                    </div>
-                    <div class="col-6 mt-2">
-                        <div class="row">
-                            <div class="col-3">
-                                <label for="">Request Type</label>
-                            </div>
-                            <div class="col-9">
 
-                                <select name="filter" id="filter" class="form-control">
-                                    <option value="0">Ticketing</option>
-                                    <option value="1">Refund</option>
-                                    <option value="2">Void</option>
-                                    <option value="3">Date Change</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="row">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Issue an Offline Ticketing</h4> 
-                            
-                               
-                           
+                            <div class="row">
+                                <div class="col-6 mt-2">
+                                    <div class="form-group">
+                                        <label>User</label>
+                                        <select name="customer" id="customer" class="form-control">
+                                            @if (isset($customers))
+                                                @foreach ($customers as $cst)
+                                                    <option value="{{ $cst->id }}">{{ $cst->contact }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6 mt-2">
+                                    <div class="form-group">
+                                        <label for="">Request Type</label>
+                                        <select name="tabtype" id="tabtype" class="form-control">
+                                            <option value="1">Ticketing</option>
+                                            <option value="2">Refund</option>
+                                            <option value="3">Void</option>
+                                            <option value="4">Date Change</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body">
                             <!-- contact-form -->
-                            <form method="POST" action="{{ url('offlineticket') }}"
-                                enctype="multipart/form-data">
-                                @csrf
-                                <div class="row">
-                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                                        <div class="form-group">
-                                            <label class="control-label" for="name">Airline Name</label>
-                                            <select name="airline_name" id="airline_name" class="form-control"
-                                                required>
-                                                <option disabled selected value> -- Select Airline -- </option>
-                                                {{-- @foreach ($data['airline'] as $record)
-                                                    <option value="{{ $record->id }}">
-                                                        {{ $record->airline_name }}</option>
-                                                @endforeach --}}
-                                            </select>
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                    <div class="form-group">
+                                        <label class="control-label" for="name">Airline Name</label>
+                                        <select name="airline_name" id="tab_airline_name" class="form-control"
+                                            required>
+                                            <option disabled selected value> -- Select Airline -- </option>
+                                            @if (isset($airline))
+                                                @foreach ($airline as $air)
+                                                    <option value="{{ $air->id }}">
+                                                        {{ $air->airline_name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
 
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                                        <div class="form-group">
-                                            <label class="control-label" for="email">PNR</label>
-                                            <input name="pnr" id="pnr" type="text" placeholder="PNR"
-                                                class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                                        <div class="form-group">
-                                            <label class="control-label" for="phone"> Booking Source</label>
-                                            <select name="booking_source" id="booking_source" class="form-control"
-                                                required>
-                                                <option disabled selected value> -- Select Booking Source --
-                                                </option>
-                                                {{-- @foreach ($data['booking'] as $record)
-                                                    <option value="{{ $record->id }}">
-                                                        {{ $record->booking_source }}</option>
-                                                @endforeach --}}
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                                        <div class="form-group">
-                                            <label class="control-label" for="subject">Sector </label>
-                                            <input id="sector" name="sector" type="text" placeholder="Sector"
-                                                class="form-control" required>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                                        <div class="form-group">
-                                            <label class="control-label" for="textarea">Travel Date</label>
-                                            <input type="date" class="form-control" id="date" name="date"
-                                                required />
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                                        <div class="form-group">
-                                            <label class="control-label" for="textarea">Passenger Name</label>
-                                            <input type="text" class="form-control" name="passenger_name"
-                                                id="passenger_name" placeholder="Any Passenger name from booking"
-                                                required>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                        <div class="form-group">
-                                            <label class="control-label" for="textarea">Remarks</label>
-                                            <textarea class="form-control" id="remarks" name="remarks" rows="4"
-                                                placeholder="Your Messages"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-center">
-                                        <button type="submit" name="singlebutton" class="btn btn-primary">Submit
-                                            Request</button>
                                     </div>
                                 </div>
-                            </form>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                    <div class="form-group">
+                                        <label class="control-label" for="email">PNR</label>
+                                        <input name="pnr" id="tab_pnr" type="text" placeholder="PNR"
+                                            class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                    <div class="form-group">
+                                        <label class="control-label" for="phone"> Booking Source</label>
+                                        <select name="booking_source" id="tab_booking_source" class="form-control"
+                                            required>
+                                            <option disabled selected value> -- Select Booking Source --
+                                            </option>
+                                            @if (isset($booking))
+                                                @foreach ($booking as $book)
+                                                    <option value="{{ $book->id }}">
+                                                        {{ $book->booking_source }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                    <div class="form-group">
+                                        <label class="control-label" for="subject">Sector </label>
+                                        <input id="tab_sector" name="sector" type="text" placeholder="Sector"
+                                            class="form-control" required>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                    <div class="form-group">
+                                        <label class="control-label" for="textarea">Travel Date</label>
+                                        <input type="date" class="form-control" id="tab_date" name="date" required />
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                    <div class="form-group">
+                                        <label class="control-label" for="textarea">Passenger Name</label>
+                                        <input type="text" class="form-control" name="passenger_name"
+                                            id="tab_passenger_name" placeholder="Any Passenger name from booking"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- contact-form -->
                         </div>
                     </div>
                 </div>
             </div>
-                
-                {{-- new form submit request end here --}}
+
+            {{-- new form submit request end here --}}
 
             <div class="content">
                 <div class="row">
@@ -327,9 +315,10 @@
                                         <div class="col-12 col-md-6">
                                             <div class="form-group">
                                                 <label class="font-weight-bold label">Transaction</label>
-                                                <select name="transaction" id="transaction" class="form-control" required>
+                                                <select name="transaction" id="transaction" class="form-control"
+                                                    required>
                                                     <option selected disabled>---Select Transaction
-                                                    ----</option>
+                                                        ----</option>
                                                     <option value="TICKET">TICKET</option>
                                                     <option value="DATE-CHANGE">DATE CHANGE</option>
                                                     <option value="APPROVAL">APPROVAL</option>
@@ -350,19 +339,19 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="col-12 col-md-6">
                                             <div class="form-group">
                                                 <label class="font-weight-bold label">Agency
                                                     Name</label>
-                                                    <select name="agency_name" id="agency_name" class="form-control"
+                                                <select name="agency_name" id="agency_name" class="form-control"
                                                     required>
                                                     <option selected disabled>---Select booking
                                                         source----</option>
-                                                    @if (isset($customer))
-                                                        @foreach ($customer as $cust)
+                                                    @if (isset($customers))
+                                                        @foreach ($customers as $cust)
                                                             <option value="{{ $cust->agency_name }}">
-                                                                {{ $cust->agency_name}}</option>
+                                                                {{ $cust->agency_name }}</option>
                                                         @endforeach
                                                     @endif
                                                 </select>
@@ -741,7 +730,7 @@
 
                 }
             });
-        }); 
+        });
         $(document).on('change', '.payment_type', function() {
             var value = $(this).val();
             if (value === 'fixed') {
@@ -863,6 +852,77 @@
 
         });
 
+        $(document).on('change', '.v_tax', function() {
+
+            let tax, basic, price = 0;
+            let dis_percentage = 0;
+            var type = $(this).closest('.main_content').find('.v_payment_type').val();
+            if (type === 'commision' || type === 'discount') {
+                tax = parseInt($(this).val());
+                basic = parseInt($(this).closest('.main_content').find('.v_basic').val());
+                price = basic + tax;
+                dis_percentage = parseInt($(this).closest('.main_content').find('.v_discount').val());
+                const finalPrice = dis_percentage * price;
+                const discount = finalPrice / 100;
+                const total_price = price - discount;
+                console.log('tex', dis_percentage, price, finalPrice, discount, basic, tax)
+                if (total_price > 0) {
+                    $(this).parents('.main_content').find('.v_value').val(total_price);
+                    console.log($(this))
+                } else {
+                    $(this).parents('.main_content').find('.v_value').val(0);
+                    console.log($(this))
+                }
+            }
+
+        });
+        $(document).on('change', '.v_basic', function() {
+            let tax, basic, price = 0;
+            let dis_percentage = 0;
+            var type = $(this).closest('.main_content').find('.v_payment_type').val();
+            if (type === 'commision' || type === 'discount') {
+                tax = parseInt($(this).closest('.main_content').find('.v_tax').val());
+                basic = parseInt($(this).val());
+                price = basic + tax;
+                dis_percentage = parseInt($(this).closest('.main_content').find('.v_discount').val());
+                const finalPrice = dis_percentage * price;
+                const discount = finalPrice / 100;
+                const total_price = price - discount;
+                console.log('tex', dis_percentage, price, finalPrice, discount, basic, tax)
+                if (total_price > 0) {
+                    $(this).parents('.main_content').find('.v_value').val(total_price);
+                    console.log($(this))
+                } else {
+                    $(this).parents('.main_content').find('.v_value').val(0);
+                    console.log($(this))
+                }
+            }
+
+        });
+        $(document).on('change', '.v_discount', function() {
+            let tax, basic, price = 0;
+            let dis_percentage = 0;
+            var type = $(this).closest('.main_content').find('.v_payment_type').val();
+            if (type === 'commision' || type === 'discount') {
+                tax = parseInt($(this).closest('.main_content').find('.v_tax').val());
+                basic = parseInt($(this).closest('.main_content').find('.v_basic').val());
+                price = basic + tax;
+                let dis_percentage = parseInt($(this).val());
+                const finalPrice = dis_percentage * price;
+                const discount = finalPrice / 100;
+                const total_price = price - discount;
+                console.log('tex', dis_percentage, price, finalPrice, discount, basic, tax)
+                if (total_price > 0) {
+                    $(this).parents('.main_content').find('.v_value').val(total_price);
+                    console.log($(this))
+                } else {
+                    $(this).parents('.main_content').find('.v_value').val(0);
+                    console.log($(this))
+                }
+            }
+
+        });
+
         $(document).on('click', '.updatepassenger', function() {
             savePassengerForm()
         });
@@ -879,9 +939,11 @@
             {{-- e.preventDefault(); --}}
             var passenger = getPassengerData();
             var ledger = getLedgerData();
+            var tabinfo = getTabinfoData();
             var data = {
                 ledger: ledger,
-                passenger: passenger
+                passenger: passenger,
+                tabinfo
             };
             console.log(data)
             $.ajax({
@@ -890,7 +952,8 @@
                     '_token': '{{ csrf_token() }}',
                     'data': {
                         ledger,
-                        passenger
+                        passenger,
+                        tabinfo
                     }
                 },
                 method: 'POST',
@@ -954,6 +1017,22 @@
             });
 
             return arr;
+        }
+
+        function getTabinfoData() {
+            var obj = {}
+            var arr = []
+            obj.user_id = $('#customer').val();
+            obj.tabtype_id = $('#tabtype').val();
+            obj.airline_id = $('#tab_airline_name').val()
+            obj.pnr = $('#tab_pnr').val();
+            obj.booking_id = $('#tab_booking_source').val()
+            obj.sector = $('#tab_sector').val();
+            obj.date = $('#tab_date').val()
+            obj.passenger_name = $('#tab_passenger_name').val()
+            arr.push(obj)
+
+            return arr
         }
     </script>
 

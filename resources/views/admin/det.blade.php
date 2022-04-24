@@ -176,7 +176,7 @@
 
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       document.getElementById('logout-form').submit();">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
 
@@ -203,304 +203,304 @@
                     <div class="alert alert-danger">
                         {{ session('error') }}
                     </div>
-                @endif 
+                @endif
                 <div class="row">
                     <div class="col-12 col-lg-8">
                         <input type="hidden" name="tabinfo_id" id="tabinfo_id" value="{{ $tabinfo->id }}">
+                        <input type="hidden" name="agency_name" id="agency_name" class="form-control"
+                            value="@if (isset($customer) && $customer) {{ $customer->agency_name }}
+                            @else ABC @endif"
+                            required />
                         <div class="card">
                             @if ($ledger && isset($ledger))
-                                <form action="{{ url('admin/update_ledger/' . $tabinfo->id) }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="ledger_id" value="{{ $ledger->id }}" />
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">Date</label>
-                                                    <input type="date" name="date"
-                                                        value="{{ $tabinfo->created_at->todateString() }}"
-                                                        class="form-control" required />
-                                                </div>
+                                <input type="hidden" name="ledger_id" id="ledger_id" value="{{ $ledger->id }}" />
+
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">Date</label>
+                                                <input type="date" name="date" id="date"
+                                                    value="{{ $tabinfo->created_at->todateString() }}"
+                                                    class="form-control" required />
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">Transaction</label>
-                                                    <select name="transaction" class="form-control" required>
-                                                        <option value="TICKET"
-                                                        @if($ledger->transaction=="TICKET")
-                                                        selected 
-                                                        @endif>TICKET</option>
-                                                        <option value="DATE-CHANGE" @if($ledger->transaction=="DATE-CHANGE")
-                                                            selected 
-                                                            @endif> DATE CHANGE</option>
-                                                        <option value="APPROVAL" @if($ledger->transaction=="APPROVAL")
-                                                            selected 
-                                                            @endif> APPROVAL</option>
-                                                        <option value="BAGGAGE" @if($ledger->transaction=="BAGGAGE")
-                                                            selected 
-                                                            @endif>BAGGAGE</option>
-                                                        <option value="CREDIT" @if($ledger->transaction=="CREDIT")
-                                                            selected 
-                                                            @endif>CREDIT</option>
-                                                        <option value="DEBIT" @if($ledger->transaction=="DEBIT")
-                                                            selected 
-                                                            @endif>DEBIT</option>
-                                                        <option value="OK-TO-BOARD" @if($ledger->transaction=="OK-TO-BOARD")
-                                                            selected 
-                                                            @endif>OK TO BOARD</option>
-                                                        <option value="INSURANCE" @if($ledger->transaction=="INSURANCE")
-                                                            selected 
-                                                            @endif>INSURANCE</option>
-                                                        <option value="PL-UK-FORM" @if($ledger->transaction=="PL-UK-FORM")
-                                                            selected 
-                                                            @endif>PL UK FORM</option>
-                                                        <option value="HOTEL_RES" @if($ledger->transaction=="HOTEL_RES")
-                                                            selected 
-                                                            @endif>HOTEL RES</option>
-                                                        <option value="VISA" @if($ledger->transaction=="VISA")
-                                                            selected 
-                                                            @endif>VISA</option>
-                                                        <option value="COVID-19" @if($ledger->transaction=="COVID-19")
-                                                            selected 
-                                                            @endif>COVID-19</option>
-                                                        <option value="REFUND" @if($ledger->transaction=="REFUND")
-                                                            selected 
-                                                            @endif>REFUND</option>
-                                                        <option value="VOID" @if($ledger->transaction=="VOID")
-                                                            selected 
-                                                            @endif>VOID</option>
-                                                        <option value="ADJUSTMENT" @if($ledger->transaction=="ADJUSTMENT")
-                                                            selected 
-                                                            @endif>ADJUSTMENT</option>
-                                                        <option value="OTHERS" @if($ledger->transaction=="OTHERS")
-                                                            selected 
-                                                            @endif>OTHERS</option>
-                                                        <option value="UMRAH" @if($ledger->transaction=="UMRAH")
-                                                            selected 
-                                                            @endif>UMRAH</option>
-                                                    </select>
-                                                    {{-- <input type="text" name="transaction" class="form-control"
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">Transaction</label>
+                                                <select name="transaction" id="transaction" class="form-control"
+                                                    required>
+                                                    <option value="TICKET"
+                                                        @if ($ledger->transaction == 'TICKET') selected @endif>TICKET
+                                                    </option>
+                                                    <option value="DATE-CHANGE"
+                                                        @if ($ledger->transaction == 'DATE-CHANGE') selected @endif> DATE
+                                                        CHANGE</option>
+                                                    <option value="APPROVAL"
+                                                        @if ($ledger->transaction == 'APPROVAL') selected @endif> APPROVAL
+                                                    </option>
+                                                    <option value="BAGGAGE"
+                                                        @if ($ledger->transaction == 'BAGGAGE') selected @endif>BAGGAGE
+                                                    </option>
+                                                    <option value="CREDIT"
+                                                        @if ($ledger->transaction == 'CREDIT') selected @endif>CREDIT
+                                                    </option>
+                                                    <option value="DEBIT"
+                                                        @if ($ledger->transaction == 'DEBIT') selected @endif>DEBIT
+                                                    </option>
+                                                    <option value="OK-TO-BOARD"
+                                                        @if ($ledger->transaction == 'OK-TO-BOARD') selected @endif>OK TO
+                                                        BOARD</option>
+                                                    <option value="INSURANCE"
+                                                        @if ($ledger->transaction == 'INSURANCE') selected @endif>INSURANCE
+                                                    </option>
+                                                    <option value="PL-UK-FORM"
+                                                        @if ($ledger->transaction == 'PL-UK-FORM') selected @endif>PL UK
+                                                        FORM</option>
+                                                    <option value="HOTEL_RES"
+                                                        @if ($ledger->transaction == 'HOTEL_RES') selected @endif>HOTEL RES
+                                                    </option>
+                                                    <option value="VISA"
+                                                        @if ($ledger->transaction == 'VISA') selected @endif>VISA
+                                                    </option>
+                                                    <option value="COVID-19"
+                                                        @if ($ledger->transaction == 'COVID-19') selected @endif>COVID-19
+                                                    </option>
+                                                    <option value="REFUND"
+                                                        @if ($ledger->transaction == 'REFUND') selected @endif>REFUND
+                                                    </option>
+                                                    <option value="VOID"
+                                                        @if ($ledger->transaction == 'VOID') selected @endif>VOID
+                                                    </option>
+                                                    <option value="ADJUSTMENT"
+                                                        @if ($ledger->transaction == 'ADJUSTMENT') selected @endif>
+                                                        ADJUSTMENT</option>
+                                                    <option value="OTHERS"
+                                                        @if ($ledger->transaction == 'OTHERS') selected @endif>OTHERS
+                                                    </option>
+                                                    <option value="UMRAH"
+                                                        @if ($ledger->transaction == 'UMRAH') selected @endif>UMRAH
+                                                    </option>
+                                                </select>
+                                                {{-- <input type="text" name="transaction" class="form-control"
                                                         value="{{ $ledger->transaction }}" required /> --}}
-                                                </div>
                                             </div>
-                                            {{-- <div class="col-12 col-md-6">
+                                        </div>
+                                        {{-- <div class="col-12 col-md-6">
                                                 <div class="form-group">
                                                     <label class="font-weight-bold label">Agency
                                                         Name</label>
-                                                    <input type="hidden" name="agency_name" class="form-control"
-                                                        value="{{ $customer->agency_name }}" required />
                                                 </div>
                                             </div> --}}
 
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">Booking
-                                                        Source</label>
-                                                    <select name="booking_id" class="form-control" required>
-                                                        <option disabled>---Select booking
-                                                            source----</option>
-                                                        @if (isset($booking))
-                                                            @foreach ($booking as $book)
-                                                                <option value="{{ $book->id }}"
-                                                                    @if ($ledger->booking_id === $book->id) selected="selected" @endif>
-                                                                    {{ $book->booking_source }}</option>
-                                                            @endforeach
-                                                        @endif
-                                                    </select>
-                                                </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">Booking
+                                                    Source</label>
+                                                <select name="booking_id" id="booking_id" class="form-control"
+                                                    required>
+                                                    <option disabled>---Select booking
+                                                        source----</option>
+                                                    @if (isset($booking))
+                                                        @foreach ($booking as $book)
+                                                            <option value="{{ $book->id }}"
+                                                                @if ($ledger->booking_id === $book->id) selected="selected" @endif>
+                                                                {{ $book->booking_source }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">Airline</label>
-                                                    <select name="airline_id" class="form-control" required>
-                                                        <option disabled>---Select Airline----</option>
-                                                        @if (isset($airline))
-                                                            @foreach ($airline as $air)
-                                                                <option value="{{ $air->id }}"
-                                                                    @if ($ledger->airline_id === $air->id) selected="selected" @endif>
-                                                                    {{ $air->airline_name }}</option>
-                                                            @endforeach
-                                                        @endif
-                                                    </select>
-                                                </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">Airline</label>
+                                                <select name="airline_id" id="airline_id" class="form-control"
+                                                    required>
+                                                    <option disabled>---Select Airline----</option>
+                                                    @if (isset($airline))
+                                                        @foreach ($airline as $air)
+                                                            <option value="{{ $air->id }}"
+                                                                @if ($ledger->airline_id === $air->id) selected="selected" @endif>
+                                                                {{ $air->airline_name }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">Ticket Type</label>
-                                                    <select name="ticket_type" class="form-control" required>
-                                                        <option disabled>---Select Ticket Type----</option>
-                                                        @if (isset($ticket_type))
-                                                            @foreach ($ticket_type as $tk)
-                                                                <option value="{{ $tk->id }}"
-                                                                    @if ($ledger->ticket_type_id === $tk->id) selected="selected" @endif>
-                                                                    {{ $tk->name }}</option>
-                                                            @endforeach
-                                                        @endif
-                                                    </select>
-                                                </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">Ticket Type</label>
+                                                <select name="ticket_type" id="ticket_type" class="form-control"
+                                                    required>
+                                                    <option disabled>---Select Ticket Type----</option>
+                                                    @if (isset($ticket_type))
+                                                        @foreach ($ticket_type as $tk)
+                                                            <option value="{{ $tk->id }}"
+                                                                @if ($ledger->ticket_type_id === $tk->id) selected="selected" @endif>
+                                                                {{ $tk->name }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">pnr</label>
-                                                    <input type="text" name="pnr" class="form-control"
-                                                        value="{{ $ledger->pnr }}" required />
-                                                </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">pnr</label>
+                                                <input type="text" name="pnr" id="pnr" class="form-control"
+                                                    value="{{ $ledger->pnr }}" required />
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">From</label>
-                                                    <input type="text" name="from" class="form-control"
-                                                        value="{{ $ledger->from }}" required />
-                                                </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">From</label>
+                                                <input type="text" name="from" id="from" class="form-control"
+                                                    value="{{ $ledger->from }}" required />
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">To</label>
-                                                    <input type="text" name="to" class="form-control"
-                                                        value="{{ $ledger->to }}" required />
-                                                </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">To</label>
+                                                <input type="text" name="to" id="to" class="form-control"
+                                                    value="{{ $ledger->to }}" required />
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">Dep Date</label>
-                                                    <input type="date" name="dep_date" class="form-control"
-                                                        value="{{ $ledger->dep_date }}" required />
-                                                </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">Dep Date</label>
+                                                <input type="date" name="dep_date" id="dep_date" class="form-control"
+                                                    value="{{ $ledger->dep_date }}" required />
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">Arrival Date</label>
-                                                    <input type="date" name="arr_date" class="form-control"
-                                                        value="{{ $ledger->arr_date }}" required />
-                                                </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">Arrival Date</label>
+                                                <input type="date" name="arr_date" id="arr_date" class="form-control"
+                                                    value="{{ $ledger->arr_date }}" required />
                                             </div>
+                                        </div>
 
-                                        </div>
-                                        <div class="text-center">
-                                            <button class="btn btn-primary">Update</button>
-                                        </div>
                                     </div>
-                                </form>
+                                </div>
                             @else
-                                <form action="{{ url('admin/ledger/' . $tabinfo->id) }}" method="POST">
-                                    @csrf
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">Date</label>
-                                                    <input type="date" name="date"
-                                                        value="{{ $tabinfo->created_at->todateString() }}"
-                                                        class="form-control" required />
-                                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">Date</label>
+                                                <input type="date" name="date" id="date"
+                                                    value="{{ $tabinfo->created_at->todateString() }}"
+                                                    class="form-control" required />
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">Transaction</label>
-                                                    <select name="transaction" class="form-control" required>
-                                                        <option value="TICKET">TICKET</option>
-                                                        <option value="DATE-CHANGE">DATE CHANGE</option>
-                                                        <option value="APPROVAL">APPROVAL</option>
-                                                        <option value="BAGGAGE">BAGGAGE</option>
-                                                        <option value="CREDIT">CREDIT</option>
-                                                        <option value="DEBIT">DEBIT</option>
-                                                        <option value="OK-TO-BOARD">OK TO BOARD</option>
-                                                        <option value="INSURANCE">INSURANCE</option>
-                                                        <option value="PL-UK-FORM">PL UK FORM</option>
-                                                        <option value="HOTEL_RES">HOTEL RES</option>
-                                                        <option value="VISA">VISA</option>
-                                                        <option value="COVID-19">COVID-19</option>
-                                                        <option value="REFUND">REFUND</option>
-                                                        <option value="VOID">VOID</option>
-                                                        <option value="ADJUSTMENT">ADJUSTMENT</option>
-                                                        <option value="OTHERS">OTHERS</option>
-                                                        <option value="UMRAH">UMRAH</option>
-                                                    </select>
-                                                </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">Transaction</label>
+                                                <select name="transaction" id="transaction" class="form-control"
+                                                    required>
+                                                    <option value="TICKET">TICKET</option>
+                                                    <option value="DATE-CHANGE">DATE CHANGE</option>
+                                                    <option value="APPROVAL">APPROVAL</option>
+                                                    <option value="BAGGAGE">BAGGAGE</option>
+                                                    <option value="CREDIT">CREDIT</option>
+                                                    <option value="DEBIT">DEBIT</option>
+                                                    <option value="OK-TO-BOARD">OK TO BOARD</option>
+                                                    <option value="INSURANCE">INSURANCE</option>
+                                                    <option value="PL-UK-FORM">PL UK FORM</option>
+                                                    <option value="HOTEL_RES">HOTEL RES</option>
+                                                    <option value="VISA">VISA</option>
+                                                    <option value="COVID-19">COVID-19</option>
+                                                    <option value="REFUND">REFUND</option>
+                                                    <option value="VOID">VOID</option>
+                                                    <option value="ADJUSTMENT">ADJUSTMENT</option>
+                                                    <option value="OTHERS">OTHERS</option>
+                                                    <option value="UMRAH">UMRAH</option>
+                                                </select>
                                             </div>
-                                            <input type="hidden" name="agency_name" class="form-control"
-                                                value="{{ $customer->agency_name }}" required />
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">Booking
-                                                        Source</label>
-                                                    <select name="booking_id" class="form-control" required>
-                                                        <option selected disabled>---Select booking
-                                                            source----</option>
-                                                        @if (isset($booking))
-                                                            @foreach ($booking as $book)
-                                                                <option value="{{ $book->id }}">
-                                                                    {{ $book->booking_source }}</option>
-                                                            @endforeach
-                                                        @endif
-                                                    </select>
-                                                </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">Booking
+                                                    Source</label>
+                                                <select name="booking_id" id="booking_id" class="form-control"
+                                                    required>
+                                                    <option selected disabled>---Select booking
+                                                        source----</option>
+                                                    @if (isset($booking))
+                                                        @foreach ($booking as $book)
+                                                            <option value="{{ $book->id }}">
+                                                                {{ $book->booking_source }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">Airline</label>
-                                                    <select name="airline_id" class="form-control" required>
-                                                        <option selected disabled>---Select Airline----</option>
-                                                        @if (isset($airline))
-                                                            @foreach ($airline as $air)
-                                                                <option value="{{ $air->id }}">
-                                                                    {{ $air->airline_name }}</option>
-                                                            @endforeach
-                                                        @endif
-                                                    </select>
-                                                </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">Airline</label>
+                                                <select name="airline_id" id="airline_id" class="form-control"
+                                                    required>
+                                                    <option selected disabled>---Select Airline----</option>
+                                                    @if (isset($airline))
+                                                        @foreach ($airline as $air)
+                                                            <option value="{{ $air->id }}">
+                                                                {{ $air->airline_name }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">Ticket Type</label>
-                                                    <select name="ticket_type" class="form-control" required>
-                                                        <option selected disabled>---Select Ticket Type----</option>
-                                                        @if (isset($ticket_type))
-                                                            @foreach ($ticket_type as $tk)
-                                                                <option value="{{ $tk->id }}">
-                                                                    {{ $tk->name }}</option>
-                                                            @endforeach
-                                                        @endif
-                                                    </select>
-                                                </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">Ticket Type</label>
+                                                <select name="ticket_type" id="ticket_type" class="form-control"
+                                                    required>
+                                                    <option selected disabled>---Select Ticket Type----</option>
+                                                    @if (isset($ticket_type))
+                                                        @foreach ($ticket_type as $tk)
+                                                            <option value="{{ $tk->id }}">
+                                                                {{ $tk->name }}</option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">pnr</label>
-                                                    <input type="text" name="pnr" class="form-control" required />
-                                                </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">pnr</label>
+                                                <input type="text" name="pnr" id="pnr" class="form-control"
+                                                    required />
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">To</label>
-                                                    <input type="text" name="to" class="form-control" required />
-                                                </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">To</label>
+                                                <input type="text" name="to" id="to" class="form-control" required />
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">From</label>
-                                                    <input type="text" name="from" class="form-control" required />
-                                                </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">From</label>
+                                                <input type="text" name="from" id="from" class="form-control"
+                                                    required />
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">Dep Date</label>
-                                                    <input type="date" name="dep_date" class="form-control" required />
-                                                </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">Dep Date</label>
+                                                <input type="date" name="dep_date" id="dep_date" class="form-control"
+                                                    required />
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">Arrival Date</label>
-                                                    <input type="date" name="arr_date" class="form-control" required />
-                                                </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">Arrival Date</label>
+                                                <input type="date" name="arr_date" id="arr_date" class="form-control"
+                                                    required />
                                             </div>
+                                        </div>
 
-                                        </div>
-                                        <div class="text-center">
-                                            <button class="btn btn-primary">Submit</button>
-                                        </div>
                                     </div>
-                                </form>
+                                </div>
                             @endif
                         </div>
                     </div>
@@ -766,7 +766,8 @@
                                                     <option value="mrs"
                                                         @if ($passenger->title == 'mrs') selected @endif>Mrs</option>
                                                     <option value="miss"
-                                                        @if ($passenger->title == 'miss') selected @endif>Miss</option>
+                                                        @if ($passenger->title == 'miss') selected @endif>Miss
+                                                    </option>
                                                 </select>
                                             </div>
                                             <div class="col-3">
@@ -850,11 +851,11 @@
                                             <div class="col-4">
                                                 <input type="text" class="form-control v_basic" name="v_basic"
                                                     value="
-                                                    @if($passenger->vendor){{ $passenger->vendor->basic }} @endif"  />
+                                                    @if ($passenger->vendor) {{ $passenger->vendor->basic }} @endif" />
                                             </div>
                                             <div class="col-4">
                                                 <input type="text" class="form-control v_tax" name="v_tax"
-                                                    value="@if($passenger->vendor){{ $passenger->vendor->tax }}@endif" />
+                                                    value="@if ($passenger->vendor) {{ $passenger->vendor->tax }} @endif" />
                                             </div>
                                         </div>
                                     </div>
@@ -862,11 +863,11 @@
                                         <div class="row d-flex">
                                             <div class="col-5">
                                                 <input type="text" class="form-control v_discount" name="v_discount"
-                                                    value="@if($passenger->vendor) {{ $passenger->vendor->discount }}@endif" />
+                                                    value="@if ($passenger->vendor) {{ $passenger->vendor->discount }} @endif" />
                                             </div>
                                             <div class="col-5">
                                                 <input type="text" class="form-control v_value" name="v_value"
-                                                    value="@if($passenger->vendor){{ $passenger->vendor->value }}@endif" />
+                                                    value="@if ($passenger->vendor) {{ $passenger->vendor->value }} @endif" />
                                             </div>
 
                                         </div>
@@ -1089,7 +1090,7 @@
                     {{-- console.log(e); --}}
                 }
             });
-        });  
+        });
         $(document).on('change', '.payment_type', function() {
             var value = $(this).val();
             if (value === 'fixed') {
@@ -1114,7 +1115,7 @@
                 $(main_content).find('.p_discount').prop('disabled', false);
             }
 
-        });  
+        });
         $(document).on('change', '.p_tax', function() {
 
             let tax, basic, price = 0;
@@ -1184,7 +1185,7 @@
                 }
             }
 
-        });   
+        });
 
         // last passenger dropdowm freez coding start here
 
@@ -1215,30 +1216,30 @@
         });
         $(document).on('change', '.v_tax', function() {
 
-                let tax, basic, price = 0;
-                let dis_percentage = 0;
-                var type = $(this).closest('.main_content').find('.v_payment_type').val();
-                if (type === 'commision' || type === 'discount') {
-                    tax = parseInt($(this).val());
-                    basic = parseInt($(this).closest('.main_content').find('.v_basic').val());
-                    price = basic + tax;
-                    dis_percentage = parseInt($(this).closest('.main_content').find('.v_discount').val());
-                    const finalPrice = dis_percentage * price;
-                    const discount = finalPrice / 100;
-                    const total_price = price - discount;
-                    console.log('tex', dis_percentage, price, finalPrice, discount, basic, tax)
-                    if (total_price > 0) {
-                        $(this).parents('.main_content').find('.v_value').val(total_price);
-                        console.log($(this))
-                    } else {
-                        $(this).parents('.main_content').find('.v_value').val(0);
-                        console.log($(this))
-                    }
+            let tax, basic, price = 0;
+            let dis_percentage = 0;
+            var type = $(this).closest('.main_content').find('.v_payment_type').val();
+            if (type === 'commision' || type === 'discount') {
+                tax = parseInt($(this).val());
+                basic = parseInt($(this).closest('.main_content').find('.v_basic').val());
+                price = basic + tax;
+                dis_percentage = parseInt($(this).closest('.main_content').find('.v_discount').val());
+                const finalPrice = dis_percentage * price;
+                const discount = finalPrice / 100;
+                const total_price = price - discount;
+                console.log('tex', dis_percentage, price, finalPrice, discount, basic, tax)
+                if (total_price > 0) {
+                    $(this).parents('.main_content').find('.v_value').val(total_price);
+                    console.log($(this))
+                } else {
+                    $(this).parents('.main_content').find('.v_value').val(0);
+                    console.log($(this))
                 }
+            }
 
         });
-        
-        
+
+
         $(document).on('change', '.v_basic', function() {
             let tax, basic, price = 0;
             let dis_percentage = 0;
@@ -1285,7 +1286,7 @@
             }
 
         });
-        
+
 
         // last passenger dropdowm freez coding end here
 
@@ -1293,7 +1294,7 @@
             savePassengerForm()
         });
 
-        
+
         $(document).on('click', '.passenger_information', function() {
             UpdatePassengerForm()
         });
@@ -1310,12 +1311,16 @@
             var id = $('#tabinfo_id').val();
             {{-- e.preventDefault(); --}}
             var data = getPassengerData();
+            var ledger = getLedgerData();
             console.log(data);
             $.ajax({
                 url: `/admin/add_passenger_info/${id}`,
                 data: {
                     '_token': '{{ csrf_token() }}',
-                    'data': data
+                    'data': {
+                        passenger: data,
+                        ledger
+                    }
                 },
                 {{-- headers: {
                     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
@@ -1323,6 +1328,9 @@
                 method: 'POST',
                 success: function(e) {
                     console.log(e);
+                    if (e.status == 200) {
+                        alert('user information proceeded successfully');
+                    }
                     {{-- location.reload() --}}
                 }
             });
@@ -1332,12 +1340,18 @@
             var id = $('#tabinfo_id').val();
             {{-- e.preventDefault(); --}}
             var data = getPassengerUpdatedData();
+            var ledger = getUpdatedeLedgerData();
+            console.log(data)
+            console.log(ledger)
             {{-- console.log(data); --}}
             $.ajax({
                 url: `/admin/update_passenger_info/${id}`,
                 data: {
                     '_token': '{{ csrf_token() }}',
-                    'data': data
+                    'data': {
+                        passenger: data,
+                        ledger: ledger
+                    }
                 },
                 method: 'POST',
                 success: function(e) {
@@ -1409,6 +1423,43 @@
                 arr.push(obj);
             });
 
+            return arr;
+        }
+
+        function getLedgerData() {
+            var arr = []
+            var obj = {}
+            obj.date = $('#date').val();
+            obj.transaction = $('#transaction').val();
+            obj.agency_name = $('#agency_name').val();
+            obj.booking_id = $('#booking_id').val();
+            obj.airline_id = $('#airline_id').val();
+            obj.ticket_type = $('#ticket_type').val();
+            obj.pnr = $('#pnr').val();
+            obj.to = $('#to').val();
+            obj.from = $('#from').val();
+            obj.dep_date = $('#dep_date').val();
+            obj.arr_date = $('#arr_date').val();
+            arr.push(obj)
+            return arr;
+        }
+
+        function getUpdatedeLedgerData() {
+            var arr = []
+            var obj = {}
+            obj.date = $('#date').val();
+            obj.ledger_id = $('#ledger_id').val();
+            obj.transaction = $('#transaction').val();
+            obj.agency_name = $('#agency_name').val();
+            obj.booking_id = $('#booking_id').val();
+            obj.airline_id = $('#airline_id').val();
+            obj.ticket_type = $('#ticket_type').val();
+            obj.pnr = $('#pnr').val();
+            obj.to = $('#to').val();
+            obj.from = $('#from').val();
+            obj.dep_date = $('#dep_date').val();
+            obj.arr_date = $('#arr_date').val();
+            arr.push(obj)
             return arr;
         }
     </script>

@@ -712,6 +712,11 @@ class adminController extends Controller
         $payment->status = 7;
         $payment->processed_by = auth()->user()->id;
         $payment->update();
+        $customer = Customer::where('email', $payment->user->email)->first();
+        if ($customer) {
+            $customer->balance = $customer->balance + $payment->amount;
+            $customer->save();
+        }
         $this->SendpaymentStatus($payment);
         return back()->with(['success' => 'Payment status is Completed']);
     }
@@ -990,50 +995,50 @@ class adminController extends Controller
         return view('admin.det')->with(['airline' => $airline, 'booking' => $booking, 'links' => $links, 'tabinfo' => $tabinfo, 'customer' => $customer, 'passengers' => $passengers, 'ledger' => $ledger, 'ticket_type' => $ticket_type, 'vendor' => $vendor]);
     }
 
-    public function addLedger(Request $request, $id)
+    public function addLedger($request, $id)
     {
         $ledger = new Ledger();
-        $ledger->date = $request->date;
-        $ledger->transaction = $request->transaction;
-        $ledger->agency_name = $request->agency_name;
-        $ledger->booking_id = $request->booking_id;
-        $ledger->airline_id = $request->airline_id;
-        $ledger->ticketType_id = $request->ticket_type;
-        $ledger->pnr = $request->pnr;
-        $ledger->to = $request->to;
-        $ledger->from = $request->from;
-        $ledger->dep_date = $request->dep_date;
-        $ledger->arr_date = $request->arr_date;
+        $ledger->date = $request['date'];
+        $ledger->transaction = $request['transaction'];
+        $ledger->agency_name = $request['agency_name'];
+        $ledger->booking_id = $request['booking_id'];
+        $ledger->airline_id = $request['airline_id'];
+        $ledger->ticketType_id = $request['ticket_type'];
+        $ledger->pnr = $request['pnr'];
+        $ledger->to = $request['to'];
+        $ledger->from = $request['from'];
+        $ledger->dep_date = $request['dep_date'];
+        $ledger->arr_date = $request['arr_date'];
         $ledger->processed_by = auth()->user()->id;
         $ledger->tabinfo_id = $id;
         $ledger->save();
-        return back()->with(['success' => 'Ledger Added Successfully']);
     }
 
-    public function updateLedger(Request $request, $id)
+    public function updateLedger($request, $id)
     {
-        $ledger = Ledger::find($request->ledger_id);
-        $ledger->date = $request->date;
-        $ledger->transaction = $request->transaction;
-        $ledger->agency_name = $request->agency_name;
-        $ledger->booking_id = $request->booking_id;
-        $ledger->airline_id = $request->airline_id;
-        $ledger->ticketType_id = $request->ticket_type;
-        $ledger->pnr = $request->pnr;
-        $ledger->to = $request->to;
-        $ledger->from = $request->from;
-        $ledger->dep_date = $request->dep_date;
-        $ledger->arr_date = $request->arr_date;
+        $ledger = Ledger::find($request['ledger_id']);
+        $ledger->date = $request['date'];
+        $ledger->transaction = $request['transaction'];
+        $ledger->agency_name = $request['agency_name'];
+        $ledger->booking_id = $request['booking_id'];
+        $ledger->airline_id = $request['airline_id'];
+        $ledger->ticketType_id = $request['ticket_type'];
+        $ledger->pnr = $request['pnr'];
+        $ledger->to = $request['to'];
+        $ledger->from = $request['from'];
+        $ledger->dep_date = $request['dep_date'];
+        $ledger->arr_date = $request['arr_date'];
         $ledger->processed_by = auth()->user()->id;
         $ledger->tabinfo_id = $id;
         $ledger->save();
-        return back()->with(['success' => 'Ledger Added Successfully']);
     }
 
     public function SavePassengerInfo(Request $request, $id)
     {
         $i = 0;
-        $data = $request->data;
+        $data = $request->data['passenger'];
+        $ledger = $request->data['ledger'][0];
+        $this->addLedger($ledger, $id);
         foreach ($data as $record) {
 
             $passenger = new Passenger();
@@ -1081,7 +1086,9 @@ class adminController extends Controller
     }
     public function UpdatePassengerInfo(Request $request, $id)
     {
-        $psngs = $request->data;
+        $psngs = $request->data['passenger'];
+        $ledger = $request->data['ledger'][0];
+        $this->updateLedger($ledger, $id);
         foreach ($psngs as $psng) {
             $passenger = Passenger::find($psng['id']);
             if ($passenger) {
@@ -1125,68 +1132,86 @@ class adminController extends Controller
         $booking = Booking::all();
         $airline = Airline::all();
         $ticket_type = TicketType::all();
-        $customer = Customer::all();
+        $customers = Customer::all();
         $ledgers = Ledger::all();
-        return view('admin.request_manual')->with(['booking' => $booking, 'airline' => $airline, 'ticket_type' => $ticket_type,'customer' => $customer,'legers' => $ledgers]);
+        return view('admin.request_manual')->with(['booking' => $booking, 'airline' => $airline, 'ticket_type' => $ticket_type, 'customers' => $customers, 'legers' => $ledgers]);
     }
 
     public function saveManualRequest(Request $request)
     {
-        
-        $ledgers = $request->data['ledger'];
-        foreach ($ledgers as $ledger) {
-            $lg = new Ledger();
-            $lg->date = $ledger['date'];
-            $lg->transaction = $ledger['transaction'];
-            $lg->agency_name = $ledger['agency_name'];
-            $lg->booking_id = $ledger['booking_id'];
-            $lg->airline_id = $ledger['airline_id'];
-            $lg->ticketType_id = $ledger['ticket_type'];
-            $lg->pnr = $ledger['pnr'];
-            $lg->to = $ledger['to'];
-            $lg->from = $ledger['from'];
-            $lg->dep_date = $ledger['dep_date'];
-            $lg->arr_date = $ledger['arr_date'];
-            $lg->processed_by = auth()->user()->id;
-            $lg->tabinfo_id = 0;
-            $lg->save();
+        $tabinfo = $request->data['tabinfo'];
+        if ($tabinfo) {
+            $tabinfo = $tabinfo[0];
+            // dd($tabinfo[0]['airline_id']);
+            $tab = new Tabinfo();
+            $tab->airline_id = $tabinfo['airline_id'];
+            $tab->booking_source_id = $tabinfo['booking_id'];
+            $tab->sector = $tabinfo['sector'];
+            $tab->date = $tabinfo['date'];
+            $tab->passenger_name = $tabinfo['passenger_name'];
+            $tab->pnr = $tabinfo['pnr'];
+            $tab->user_id = $tabinfo['user_id'];
+            $tab->processed_by = auth()->user()->id;
+            $tab->tabtype_id = $tabinfo['tabtype_id'];
+            $result = $tab->save();
+            if ($result) {
+                $ledgers = $request->data['ledger'];
+                foreach ($ledgers as $ledger) {
+                    $lg = new Ledger();
+                    $lg->date = $ledger['date'];
+                    $lg->transaction = $ledger['transaction'];
+                    $lg->agency_name = $ledger['agency_name'];
+                    $lg->booking_id = $ledger['booking_id'];
+                    $lg->airline_id = $ledger['airline_id'];
+                    $lg->ticketType_id = $ledger['ticket_type'];
+                    $lg->pnr = $ledger['pnr'];
+                    $lg->to = $ledger['to'];
+                    $lg->from = $ledger['from'];
+                    $lg->dep_date = $ledger['dep_date'];
+                    $lg->arr_date = $ledger['arr_date'];
+                    $lg->processed_by = auth()->user()->id;
+                    $lg->tabinfo_id = $tab->id;
+                    $lg->save();
+                }
+
+                $passengers = $request->data['passenger'];
+                foreach ($passengers as $passenger) {
+                    $psng = new Passenger();
+                    $psng->type = $passenger['type'];
+                    $psng->title = $passenger['title'];
+                    $psng->passenger_name = $passenger['passenger_name'];
+                    $psng->ticket = $passenger['ticket'];
+                    $psng->payment_type = $passenger['payment_type'];
+                    $psng->remarks = $passenger['remarks'];
+                    $psng->processed_by = Auth::user()->id;
+                    $psng->tabinfo_id = $tab->id;
+                    $psng->save();
+
+                    $price = new Price();
+                    $price->basic = $passenger['p_basic'];
+                    $price->tax = $passenger['p_tax'];
+                    $price->discount = $passenger['p_discount'];
+                    $price->value = $passenger['p_value'];
+                    $price->passenger_id = $psng->id;
+                    // $price->passenger_id = 10;
+                    $price->save();
+
+                    $vendor = new Vendor();
+                    $vendor->basic = $passenger['v_basic'];
+                    $vendor->v_payment_type = $passenger['v_payment_type'];
+                    $vendor->tax = $passenger['v_tax'];
+                    $vendor->discount = $passenger['v_discount'];
+                    $vendor->value = $passenger['v_value'];
+                    $vendor->passenger_id = $psng->id;
+                    // $vendor->passenger_id = 12;
+                    $vendor->vendor_id = $passenger['vendor_id'];
+                    $vendor->save();
+                }
+            }
         }
 
-        $passengers = $request->data['passenger']; 
-        foreach ($passengers as $passenger) {
-            $psng = new Passenger();
-            $psng->type = $passenger['type'];
-            $psng->title = $passenger['title'];
-            $psng->passenger_name = $passenger['passenger_name'];
-            $psng->ticket = $passenger['ticket'];
-            $psng->payment_type = $passenger['payment_type'];
-            $psng->remarks = $passenger['remarks'];
-            $psng->processed_by = Auth::user()->id;
-            $psng->tabinfo_id = 0;
-            $psng->save();
 
-            $price = new Price();
-            $price->basic = $passenger['p_basic'];
-            $price->tax = $passenger['p_tax'];
-            $price->discount = $passenger['p_discount'];
-            $price->value = $passenger['p_value'];
-            $price->passenger_id = $psng->id;
-            // $price->passenger_id = 10;
-            $price->save();
 
-            $vendor = new Vendor();
-            $vendor->basic = $passenger['v_basic'];
-            $vendor->v_payment_type = $passenger['v_payment_type'];
-            $vendor->tax = $passenger['v_tax'];
-            $vendor->discount = $passenger['v_discount'];
-            $vendor->value = $passenger['v_value'];
-            $vendor->passenger_id = $psng->id;
-            // $vendor->passenger_id = 12;
-            $vendor->vendor_id = $passenger['vendor_id'];
-            $vendor->save();
-            
-        }
-       
         return response()->json([
             'status' => 200,
             'message' => 'data saved successfully'
