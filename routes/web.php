@@ -197,3 +197,19 @@ Route::get('/admin/getVendor', [adminController::class, 'getVendor']);
 
 
 Route::view('det', 'admin.det');
+
+
+Route::post('/visiting_card/upload_image', [adminController::class, 'upload_visiting_image']);
+Route::get('/visiting_card/delete_image/{filename}', [adminController::class, 'delete_visiting_image']);
+
+
+Route::post('/agency_picture/upload_image', [adminController::class, 'upload_agency_image']);
+Route::get('/agency_picture/delete_image/{filename}', [adminController::class, 'delete_agency_image']);
+
+Route::get('/downloadPdf', [ledgerController::class, 'showPdf']);
+Route::get('/exportLedger', [ledgerController::class, 'ExportLedger']);
+
+
+Route::get('/test', [adminController::class, 'deleteCustomer']);
+
+Route::get('admin/ledger', [adminController::class, 'adminLedger']);

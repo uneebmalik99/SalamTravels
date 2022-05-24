@@ -91,6 +91,13 @@
                             <p>Request Manual</p>
                         </a>
                     </li>
+
+                    <li>
+                        <a href="{{ url('admin/ledger') }}">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <p>Ledger</p>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -151,7 +158,7 @@
 
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       document.getElementById('logout-form').submit();">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
 
@@ -873,7 +880,8 @@
             <footer class="footer">
                 <div class=" container-fluid ">
                     <div class="copyright" id="copyright">
-                        @<script>
+                        @
+                        <script>
                             document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))
                         </script>, Developed by <a href="https://therevolutiontechnologies.com"
                             target="_blank">The Revolution Technologies</a>

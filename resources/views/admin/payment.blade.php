@@ -90,6 +90,13 @@
                             <p>Request Manual</p>
                         </a>
                     </li>
+
+                    <li>
+                        <a href="{{ url('admin/ledger') }}">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <p>Ledger</p>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -140,7 +147,7 @@
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                                                                                               document.getElementById('logout-form').submit();">
+                                                                                                                                   document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
 
@@ -209,10 +216,10 @@
                                                                 </div></a></td>
                                                         <td>{{ $record->payment_date }}</td>
                                                         <td>{{ $record->bank[0]->bank_name }}</td>
-                                                        <td>{{ $record->amount }}</td>    
+                                                        <td>{{ $record->amount }}</td>
                                                         <td style="width: 15%;">
-                                                            <select name="adminStatus"
-                                                                id="adminStatus" class="form-control"
+                                                            <select name="adminStatus" id="adminStatus"
+                                                                class="form-control"
                                                                 onchange="location = this.value;">
                                                                 @foreach ($record->link as $link)
                                                                     <option
@@ -303,8 +310,7 @@
                                                         <input type="hidden" name="remarks_id" id="remarks_id">
                                                         <div class="form-group">
                                                             <label for="">Admin remarks</label>
-                                                            <textarea type="text" name="admin_remarks" rows="4"
-                                                                id="admin_remarks" class="form-control"></textarea>
+                                                            <textarea type="text" name="admin_remarks" rows="4" id="admin_remarks" class="form-control"></textarea>
                                                         </div>
 
                                                     </div>
@@ -352,7 +358,8 @@
             <footer class="footer">
                 <div class=" container-fluid ">
                     <div class="copyright" id="copyright">
-                        @<script>
+                        @
+                        <script>
                             document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))
                         </script>, Developed by <a href="https://therevolutiontechnologies.com"
                             target="_blank">The Revolution Technologies</a>

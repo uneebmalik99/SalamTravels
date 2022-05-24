@@ -17,6 +17,7 @@ use App\Models\DateChange;
 use App\Models\Ledger;
 use App\Models\Passenger;
 use App\Models\Payment;
+use App\Models\PaymentHistory;
 use App\Models\Price;
 use App\Models\RequestManual;
 use App\Models\SourceVendor;
@@ -37,6 +38,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use Spatie\Permission\Models\Role;
 use DB;
+use Illuminate\Support\Facades\DB as FacadesDB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class adminController extends Controller
 {
@@ -46,7 +50,7 @@ class adminController extends Controller
     }
     public function index()
     {
-        $data = Tabinfo::latest()->get();
+        $data = Tabinfo::where('tabtype_id', '!=', 5)->latest()->get();
         foreach ($data as $record) {
             $cls = '';
             switch ($record->status->name) {
@@ -68,7 +72,8 @@ class adminController extends Controller
             $record->bgColor = $cls;
             $record->all_airline = Airline::find($record->airline_id);
             $record->all_booking_source = Booking::find($record->booking_source_id);
-            $record->customer = Customer::where('email', $record->user->email)->first();
+            $record->user = User::where('id', $record->user_id)->withTrashed()->first();
+            $record->customer = Customer::where('email', $record->user->email)->withTrashed()->first();
             $record->date = $record->created_at->toDateString();
             if (isset($record->processed_by)) {
                 $record->processed_by = User::find($record->processed_by);
@@ -142,7 +147,7 @@ class adminController extends Controller
                 'password' => 'required',
                 'role_type' => 'required|string'
             ]);
-
+            // dd($request->all());
             $user = new User();
             $user->name = $request->contact;
             $user->email = $request->email;
@@ -151,7 +156,7 @@ class adminController extends Controller
             $user->role_type = $request->role_type;
             $user->save();
             $user->assignRole('Admin');
-
+            $user->givePermissionTo($request->permission);
             return back()->with(['success' => 'Sub admin added Successfully']);
         } else {
             return back()->with(['error' => 'You do not have permission to create customer']);
@@ -164,14 +169,28 @@ class adminController extends Controller
     }
     public function updateAdmi(Request $request)
     {
-
-        $id = $request->post('newid');
-        $user =  User::find($id);
-        $user->name = $request['name'];
-        $user->role = $request['role'];
-
-        $user->save();
-        return redirect('admin/customers');
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Admin') || $user->hasRole('Super Admin')) {
+            // $request->validate([
+            //     'contact' => 'required',
+            //     'email' => 'required',
+            //     'role_type' => 'required|string'
+            // ]);
+            $id = $request->post('newid');
+            $user =  User::find($id);
+            $user->name = $request['name'];
+            $user->role_type = $request['role_type'];
+            $user->email = $request->email;
+            if ($request->password) {
+                $user->password = Hash::make($request->password);
+            }
+            $user->save();
+            FacadesDB::table('model_has_permissions')->where('model_id', $user->id)->delete();
+            $user->givePermissionTo($request->permission);
+            return back()->with(['success' => 'Sub admin updated Successfully']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to create customer']);
+        }
     }
     public function edit(Request $request, $id)
     {
@@ -205,6 +224,9 @@ class adminController extends Controller
     public function editCustomer($id)
     {
         $data = Customer::find($id);
+        // if (getimagesize('/images/' . $data->visiting_card)) {
+        $data->filesize = file_exists('/images/' . $data->visiting_card);
+        // }
         return view('admin.updateCustomer')->with(['data' => $data]);
     }
     public function updateCustomer(Request $request, $id)
@@ -213,12 +235,19 @@ class adminController extends Controller
         if ($user->hasRole('Super Admin') || $user->hasRole('Admin')) {
             $customer = Customer::find($id);
             $customer->contact = $request['contact'];
+            $customer->email = $request['email'];
             $customer->phone = $request['phone'];
             $customer->agency_name = $request['agency_name'];
             $customer->mobile = $request['mobile'];
+            $customer->visiting_card = $request['visiting_card'];
+            $customer->agency_picture = $request['agency_picture'];
+            $customer->card_size = $request['filesize'];
             $customer->credit_limit = $request['credit_limit'];
             $customer->processed_by = auth()->user()->id;
             $customer->update();
+            $user->email = $request['email'];
+            $user->save();
+            // dd($request->all());
             return back()->with(['success' => 'customer updated successfully']);
         } else {
             return back()->with(['error' => 'You do not have permission to update customer']);
@@ -311,7 +340,8 @@ class adminController extends Controller
                     $cls = 'bg-light';
             }
             $record->bgColor = $cls;
-            $record->customer = Customer::where('email', $record->user->email)->first();
+            $record->user = User::where('id', $record->user_id)->withTrashed()->first();
+            $record->customer = Customer::where('email', $record->user->email)->withTrashed()->first();
             $record->all_airline = Airline::find($record->airline_id);
             $record->all_booking_source = Booking::find($record->booking_source_id);
             $record->link = Tabtypelink::where('tabtype_id', $record->tabtype_id)->get();
@@ -354,7 +384,8 @@ class adminController extends Controller
             $record->bgColor = $cls;
             $record->all_airline = Airline::find($record->airline_id);
             $record->all_booking_source = Booking::find($record->booking_source_id);
-            $record->customer = Customer::where('email', $record->user->email)->first();
+            $record->user = User::where('id', $record->user_id)->withTrashed()->first();
+            $record->customer = Customer::where('email', $record->user->email)->withTrashed()->first();
             $record->link = Tabtypelink::where('tabtype_id', $record->tabtype_id)->get();
             if (isset($record->processed_by)) {
                 $record->processed_by = User::find($record->processed_by);
@@ -387,7 +418,8 @@ class adminController extends Controller
             $record->bgColor = $cls;
             $record->all_airline = Airline::find($record->airline_id);
             $record->all_booking_source = Booking::find($record->booking_source_id);
-            $record->customer = Customer::where('email', $record->user->email)->first();
+            $record->user = User::where('id', $record->user_id)->withTrashed()->first();
+            $record->customer = Customer::where('email', $record->user->email)->withTrashed()->first();
             $record->link = Tabtypelink::where('tabtype_id', $record->tabtype_id)->get();
             if (isset($record->processed_by)) {
                 $record->processed_by = User::find($record->processed_by);
@@ -420,7 +452,8 @@ class adminController extends Controller
             $record->bgColor = $cls;
             $record->all_airline = Airline::find($record->airline_id);
             $record->all_booking_source = Booking::find($record->booking_source_id);
-            $record->customer = Customer::where('email', $record->user->email)->first();
+            $record->user = User::where('id', $record->user_id)->withTrashed()->first();
+            $record->customer = Customer::where('email', $record->user->email)->withTrashed()->first();
             $record->link = Tabtypelink::where('tabtype_id', $record->tabtype_id)->get();
             if (isset($record->processed_by)) {
                 $record->processed_by = User::find($record->processed_by);
@@ -430,7 +463,7 @@ class adminController extends Controller
     }
     public function paymentList()
     {
-        $data = Payment::orderBy('payment_date', 'DESC')->get();
+        $data = Payment::latest()->get();
         foreach ($data as $record) {
             $record->status = Status::find($record->status);
             $record->ticket = Tabinfo::find($record->ticket_id);
@@ -439,7 +472,8 @@ class adminController extends Controller
             if (isset($record->processed_by)) {
                 $record->processed_by = User::find($record->processed_by);
             }
-            $record->customer = Customer::where('email', $record->user->email)->first();
+            $record->user = User::where('id', $record->user_id)->withTrashed()->first();
+            $record->customer = Customer::where('email', $record->user->email)->withTrashed()->first();
         }
 
         return view('admin.payment')->with(['data' => $data]);
@@ -457,51 +491,73 @@ class adminController extends Controller
     }
     public function ticketingPosted($id)
     {
+
         /*$ticket = OfflineTicket::find($id);
         $ticket->status = 6;
         $ticket->update();*/
-        $tabinfo = Tabinfo::find($id);
-        $tabinfo->status_id = 6;
-        $tabinfo->processed_by = auth()->user()->id;
-        $tabinfo->update();
-        $this->SendStatusMail($tabinfo);
-        return back()->with(['success' => 'ticket status is Posted']);
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Posted')) {
+            $tabinfo = Tabinfo::find($id);
+            $tabinfo->status_id = 6;
+            $tabinfo->processed_by = auth()->user()->id;
+            $tabinfo->update();
+            $this->SendStatusMail($tabinfo);
+            return back()->with(['success' => 'ticket status is Posted']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
+        }
     }
     public function ticketingProcessing($id)
     {
         /*$ticket = OfflineTicket::find($id);
         $ticket->status = 1;
         $ticket->update();*/
-        $tabinfo = Tabinfo::find($id);
-        $tabinfo->status_id = 1;
-        $tabinfo->processed_by = auth()->user()->id;
-        $tabinfo->update();
-        $this->SendStatusMail($tabinfo);
-        return back()->with(['success' => 'ticket status is Processing']);
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Processing')) {
+            $tabinfo = Tabinfo::find($id);
+            $tabinfo->status_id = 1;
+            $tabinfo->processed_by = auth()->user()->id;
+            $tabinfo->update();
+            $this->SendStatusMail($tabinfo);
+            return back()->with(['success' => 'ticket status is Processing']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
+        }
     }
     public function ticketingCompleted($id)
     {
         /*$ticket = OfflineTicket::find($id);
         $ticket->status = 7;
         $ticket->update();*/
-        $tabinfo = Tabinfo::find($id);
-        $tabinfo->status_id = 7;
-        $tabinfo->processed_by = auth()->user()->id;
-        $tabinfo->update();
-        $this->SendStatusMail($tabinfo);
-        return back()->with(['success' => 'ticket status is Completed']);
+
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Completed')) {
+            $tabinfo = Tabinfo::find($id);
+            $tabinfo->status_id = 7;
+            $tabinfo->processed_by = auth()->user()->id;
+            $tabinfo->update();
+            $this->SendStatusMail($tabinfo);
+            return back()->with(['success' => 'ticket status is Completed']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
+        }
     }
     public function ticketingRejected($id)
     {
         /*$ticket = OfflineTicket::find($id);
         $ticket->status = 4;
         $ticket->update();*/
-        $tabinfo = Tabinfo::find($id);
-        $tabinfo->status_id = 4;
-        $tabinfo->processed_by = auth()->user()->id;
-        $tabinfo->update();
-        $this->SendStatusMail($tabinfo);
-        return back()->with(['success' => 'ticket status is Rejected']);
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Rejected')) {
+            $tabinfo = Tabinfo::find($id);
+            $tabinfo->status_id = 4;
+            $tabinfo->processed_by = auth()->user()->id;
+            $tabinfo->update();
+            $this->SendStatusMail($tabinfo);
+            return back()->with(['success' => 'ticket status is Rejected']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
+        }
     }
     public function refundSubmitted($id)
     {
@@ -519,48 +575,71 @@ class adminController extends Controller
         /*$refund = Refund::find($id);
         $refund->status = 6;
         $refund->update();*/
-        $tabinfo = Tabinfo::find($id);
-        $tabinfo->status_id = 6;
-        $tabinfo->processed_by = auth()->user()->id;
-        $tabinfo->update();
-        $this->SendStatusMail($tabinfo);
-        return back()->with(['success' => 'Refund status is Posted']);
+
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Posted')) {
+            $tabinfo = Tabinfo::find($id);
+            $tabinfo->status_id = 6;
+            $tabinfo->processed_by = auth()->user()->id;
+            $tabinfo->update();
+            $this->SendStatusMail($tabinfo);
+            return back()->with(['success' => 'Refund status is Posted']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
+        }
     }
     public function refundProcessing($id)
     {
         /*$refund = Refund::find($id);
         $refund->status = 1;
         $refund->update();*/
-        $tabinfo = Tabinfo::find($id);
-        $tabinfo->status_id = 1;
-        $tabinfo->processed_by = auth()->user()->id;
-        $tabinfo->update();
-        $this->SendStatusMail($tabinfo);
-        return back()->with(['success' => 'Refund status is Processing']);
+
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Processing')) {
+            $tabinfo = Tabinfo::find($id);
+            $tabinfo->status_id = 1;
+            $tabinfo->processed_by = auth()->user()->id;
+            $tabinfo->update();
+            $this->SendStatusMail($tabinfo);
+            return back()->with(['success' => 'Refund status is Processing']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
+        }
     }
     public function refundCompleted($id)
     {
         /*$refund = Refund::find($id);
         $refund->status = 7;
         $refund->update();*/
-        $tabinfo = Tabinfo::find($id);
-        $tabinfo->status_id = 7;
-        $tabinfo->processed_by = auth()->user()->id;
-        $tabinfo->update();
-        $this->SendStatusMail($tabinfo);
-        return back()->with(['success' => 'Refund status is Completed']);
+
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Processing')) {
+            $tabinfo = Tabinfo::find($id);
+            $tabinfo->status_id = 7;
+            $tabinfo->processed_by = auth()->user()->id;
+            $tabinfo->update();
+            $this->SendStatusMail($tabinfo);
+            return back()->with(['success' => 'Refund status is Completed']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
+        }
     }
     public function refundRejected($id)
     {
         /*$refund = Refund::find($id);
         $refund->status = 4;
         $refund->update();*/
-        $tabinfo = Tabinfo::find($id);
-        $tabinfo->status_id = 4;
-        $tabinfo->processed_by = auth()->user()->id;
-        $tabinfo->update();
-        $this->SendStatusMail($tabinfo);
-        return back()->with(['success' => 'Refund status is Rejected']);
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Rejected')) {
+            $tabinfo = Tabinfo::find($id);
+            $tabinfo->status_id = 4;
+            $tabinfo->processed_by = auth()->user()->id;
+            $tabinfo->update();
+            $this->SendStatusMail($tabinfo);
+            return back()->with(['success' => 'Refund status is Rejected']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
+        }
     }
     public function voidSubmitted($id)
     {
@@ -578,48 +657,68 @@ class adminController extends Controller
         /*$voidtab = Voidtab::find($id);
         $voidtab->status = 6;
         $voidtab->update();*/
-        $tabinfo = Tabinfo::find($id);
-        $tabinfo->status_id = 6;
-        $tabinfo->processed_by = auth()->user()->id;
-        $tabinfo->update();
-        $this->SendStatusMail($tabinfo);
-        return back()->with(['success' => 'Void status is Posted']);
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Posted')) {
+            $tabinfo = Tabinfo::find($id);
+            $tabinfo->status_id = 6;
+            $tabinfo->processed_by = auth()->user()->id;
+            $tabinfo->update();
+            $this->SendStatusMail($tabinfo);
+            return back()->with(['success' => 'Void status is Posted']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
+        }
     }
     public function voidProcessing($id)
     {
         /*$voidtab = Voidtab::find($id);
         $voidtab->status = 1;
         $voidtab->update();*/
-        $tabinfo = Tabinfo::find($id);
-        $tabinfo->status_id = 1;
-        $tabinfo->processed_by = auth()->user()->id;
-        $tabinfo->update();
-        $this->SendStatusMail($tabinfo);
-        return back()->with(['success' => 'Void status is Processing']);
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Processing')) {
+            $tabinfo = Tabinfo::find($id);
+            $tabinfo->status_id = 1;
+            $tabinfo->processed_by = auth()->user()->id;
+            $tabinfo->update();
+            $this->SendStatusMail($tabinfo);
+            return back()->with(['success' => 'Void status is Processing']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
+        }
     }
     public function voidCompleted($id)
     {
         /*$voidtab = Voidtab::find($id);
         $voidtab->status = 7;
         $voidtab->update();*/
-        $tabinfo = Tabinfo::find($id);
-        $tabinfo->status_id = 7;
-        $tabinfo->processed_by = auth()->user()->id;
-        $tabinfo->update();
-        $this->SendStatusMail($tabinfo);
-        return back()->with(['success' => 'Void status is Completed']);
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Completed')) {
+            $tabinfo = Tabinfo::find($id);
+            $tabinfo->status_id = 7;
+            $tabinfo->processed_by = auth()->user()->id;
+            $tabinfo->update();
+            $this->SendStatusMail($tabinfo);
+            return back()->with(['success' => 'Void status is Completed']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
+        }
     }
     public function voidRejected($id)
     {
         /*$voidtab = Voidtab::find($id);
         $voidtab->status = 4;
         $voidtab->update();*/
-        $tabinfo = Tabinfo::find($id);
-        $tabinfo->status_id = 4;
-        $tabinfo->processed_by = auth()->user()->id;
-        $tabinfo->update();
-        $this->SendStatusMail($tabinfo);
-        return back()->with(['success' => 'Void status is Rejected']);
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Rejected')) {
+            $tabinfo = Tabinfo::find($id);
+            $tabinfo->status_id = 4;
+            $tabinfo->processed_by = auth()->user()->id;
+            $tabinfo->update();
+            $this->SendStatusMail($tabinfo);
+            return back()->with(['success' => 'Void status is Rejected']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
+        }
     }
     public function dateChangeSubmitted($id)
     {
@@ -637,48 +736,69 @@ class adminController extends Controller
         /*$DateChange = DateChange::find($id);
         $DateChange->status = 6;
         $DateChange->update();*/
-        $tabinfo = Tabinfo::find($id);
-        $tabinfo->status_id = 6;
-        $tabinfo->processed_by = auth()->user()->id;
-        $tabinfo->update();
-        $this->SendStatusMail($tabinfo);
-        return back()->with(['success' => 'DateChange status is Posted']);
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Posted')) {
+            $tabinfo = Tabinfo::find($id);
+            $tabinfo->status_id = 6;
+            $tabinfo->processed_by = auth()->user()->id;
+            $tabinfo->update();
+            $this->SendStatusMail($tabinfo);
+            return back()->with(['success' => 'DateChange status is Posted']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
+        }
     }
     public function dateChangeProcessing($id)
     {
         /*$DateChange = DateChange::find($id);
         $DateChange->status = 1;
         $DateChange->update();*/
-        $tabinfo = Tabinfo::find($id);
-        $tabinfo->status_id = 1;
-        $tabinfo->processed_by = auth()->user()->id;
-        $tabinfo->update();
-        $this->SendStatusMail($tabinfo);
-        return back()->with(['success' => 'DateChange status is Processing']);
+
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Processing')) {
+            $tabinfo = Tabinfo::find($id);
+            $tabinfo->status_id = 1;
+            $tabinfo->processed_by = auth()->user()->id;
+            $tabinfo->update();
+            $this->SendStatusMail($tabinfo);
+            return back()->with(['success' => 'DateChange status is Processing']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
+        }
     }
     public function dateChangeCompleted($id)
     {
         /*$DateChange = DateChange::find($id);
         $DateChange->status = 7;
         $DateChange->update();*/
-        $tabinfo = Tabinfo::find($id);
-        $tabinfo->status_id = 7;
-        $tabinfo->processed_by = auth()->user()->id;
-        $tabinfo->update();
-        $this->SendStatusMail($tabinfo);
-        return back()->with(['success' => 'DateChange status is Completed']);
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Completed')) {
+            $tabinfo = Tabinfo::find($id);
+            $tabinfo->status_id = 7;
+            $tabinfo->processed_by = auth()->user()->id;
+            $tabinfo->update();
+            $this->SendStatusMail($tabinfo);
+            return back()->with(['success' => 'DateChange status is Completed']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
+        }
     }
     public function dateChangeRejected($id)
     {
         /*$DateChange = DateChange::find($id);
         $DateChange->status = 4;
         $DateChange->update();*/
-        $tabinfo = Tabinfo::find($id);
-        $tabinfo->status_id = 4;
-        $tabinfo->processed_by = auth()->user()->id;
-        $tabinfo->update();
-        $this->SendStatusMail($tabinfo);
-        return back()->with(['success' => 'DateChange status is Rejected']);
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Rejected')) {
+            $tabinfo = Tabinfo::find($id);
+            $tabinfo->status_id = 4;
+            $tabinfo->processed_by = auth()->user()->id;
+            $tabinfo->update();
+            $this->SendStatusMail($tabinfo);
+            return back()->with(['success' => 'DateChange status is Rejected']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
+        }
     }
     public function paymentSubmitted($id)
     {
@@ -690,44 +810,79 @@ class adminController extends Controller
     }
     public function paymentPosted($id)
     {
-        $payment = Payment::find($id);
-        $payment->status = 6;
-        $payment->processed_by = auth()->user()->id;
-        $payment->update();
-        $this->SendpaymentStatus($payment);
-        return back()->with(['success' => 'Payment status is Posted']);
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Posted')) {
+            $payment = Payment::find($id);
+            $payment->status = 6;
+            $payment->processed_by = auth()->user()->id;
+            $payment->update();
+            $tabinfo = new Tabinfo();
+            $tabinfo->user_id = $payment->user_id;
+            $tabinfo->tabtype_id = 5;
+            $tabinfo->processed_by = auth()->user()->id;
+            $tabinfo->save();
+            $payment->tabinfo_id = $tabinfo->id;
+            $payment->save();
+            $customer = Customer::where('email', $payment->user->email)->first();
+            if ($customer) {
+                $customer->balance = $customer->balance + $payment->amount;
+                $customer->credit_limit = $customer->credit_limit + $payment->amount;
+                $customer->save();
+                $pay_history = new PaymentHistory();
+                $pay_history->credit = $payment->amount;
+                $pay_history->balance = $customer->balance;
+                $pay_history->user_id = $tabinfo->user_id;
+                $pay_history->payment_id = $payment->id;
+                $pay_history->save();
+            }
+
+            $this->SendpaymentStatus($payment);
+            return back()->with(['success' => 'Payment status is Posted']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
+        }
     }
     public function paymentProcessing($id)
     {
-        $payment = Payment::find($id);
-        $payment->status = 1;
-        $payment->processed_by = auth()->user()->id;
-        $payment->update();
-        $this->SendpaymentStatus($payment);
-        return back()->with(['success' => 'Payment status is Processing']);
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Processing')) {
+            $payment = Payment::find($id);
+            $payment->status = 1;
+            $payment->processed_by = auth()->user()->id;
+            $payment->update();
+            $this->SendpaymentStatus($payment);
+            return back()->with(['success' => 'Payment status is Processing']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
+        }
     }
     public function paymentCompleted($id)
     {
-        $payment = Payment::find($id);
-        $payment->status = 7;
-        $payment->processed_by = auth()->user()->id;
-        $payment->update();
-        $customer = Customer::where('email', $payment->user->email)->first();
-        if ($customer) {
-            $customer->balance = $customer->balance + $payment->amount;
-            $customer->save();
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Completed')) {
+            $payment = Payment::find($id);
+            $payment->status = 7;
+            $payment->processed_by = auth()->user()->id;
+            $payment->update();
+            $this->SendpaymentStatus($payment);
+            return back()->with(['success' => 'Payment status is Completed']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
         }
-        $this->SendpaymentStatus($payment);
-        return back()->with(['success' => 'Payment status is Completed']);
     }
     public function paymentRejected($id)
     {
-        $payment = Payment::find($id);
-        $payment->status = 4;
-        $payment->processed_by = auth()->user()->id;
-        $payment->update();
-        $this->SendpaymentStatus($payment);
-        return back()->with(['success' => 'Payment status is Rejected']);
+        $user = User::find(Auth::user()->id);
+        if ($user->hasRole('Super Admin') || $user->hasPermissionTo('Rejected')) {
+            $payment = Payment::find($id);
+            $payment->status = 4;
+            $payment->processed_by = auth()->user()->id;
+            $payment->update();
+            $this->SendpaymentStatus($payment);
+            return back()->with(['success' => 'Payment status is Rejected']);
+        } else {
+            return back()->with(['error' => 'You do not have permission to update Status']);
+        }
     }
     public function adminTicketingStatus(Request $request, $id)
     {
@@ -985,6 +1140,14 @@ class adminController extends Controller
         $ticket_type = TicketType::all();
         $links = Tabtypelink::where('tabtype_id', $tabinfo->tabtype_id)->get();
         $vendor = SourceVendor::all();
+        foreach ($links as $link) {
+
+            if ($link->status->name == 'posted' && $ledger && $passengers) {
+                $link->enablePosted = false;
+            } else {
+                $link->enablePosted = false;
+            }
+        }
         foreach ($passengers as $passenger) {
             if ($passenger && isset($passenger)) {
                 $passenger->price = Price::where('passenger_id', $passenger->id)->first();
@@ -1046,28 +1209,54 @@ class adminController extends Controller
             $passenger->title = $record['title'];
             $passenger->passenger_name = $record['passenger_name'];
             $passenger->ticket = $record['ticket'];
-            $passenger->payment_type = $record['payment_type'];
+            $passenger->payment_type = null;
             $passenger->remarks = $record['remarks'];
             $passenger->processed_by = Auth::user()->id;
             $passenger->tabinfo_id = $id;
             $passenger->save();
 
             $price = new Price();
-            $price->basic = $record['p_basic'];
-            $price->tax = $record['p_tax'];
-            $price->discount = $record['p_discount'];
+            $price->basic = null;
+            $price->tax = null;
+            $price->discount = null;
             $price->value = $record['p_value'];
             $price->passenger_id = $passenger->id;
             $price->save();
 
+
+
+            $pay_history = new PaymentHistory;
+            $tabinfo = Tabinfo::find($id);
+            $customer = Customer::where('email', $tabinfo->user->email)->first();
+            if ($tabinfo) {
+                $paid = 0;
+                if ($tabinfo->tabtype_id == 2 || $tabinfo->tabtype_id == 3) {
+                    $pay_history->credit = $price->value;
+                    $customer->credit_limit = $customer->credit_limit + $price->value;
+                    $customer->balance = $customer->balance + $price->value;
+                    $pay_history->balance = $customer->balance + $price->value;
+                    $customer->save();
+                } else {
+                    $pay_history->debit = $price->value;
+                    $customer->credit_limit = $customer->credit_limit - $price->value;
+                    $paid = $customer->balance - $price->value;
+                    $customer->balance = $paid;
+                    $pay_history->balance = $paid;
+                    $customer->save();
+                }
+                $pay_history->user_id = $tabinfo->user_id;
+            }
+            $pay_history->passenger_id = $passenger->id;
+            $pay_history->save();
+
             $vendor = new Vendor();
-            $vendor->basic = $record['v_basic'];
-            $vendor->v_payment_type = $record['v_payment_type'];
-            $vendor->tax = $record['v_tax'];
-            $vendor->discount = $record['v_discount'];
+            $vendor->basic = null;
+            $vendor->v_payment_type = null;
+            $vendor->tax = null;
+            $vendor->discount = null;
             $vendor->value = $record['v_value'];
             $vendor->passenger_id = $passenger->id;
-            $vendor->vendor_id = $record['vendor_id'];
+            $vendor->vendor_id = null;
             $vendor->save();
             $i = $i + 1;
             // return back()->with(['success', 'Passenger info added successfully']);
@@ -1096,7 +1285,7 @@ class adminController extends Controller
                 $passenger->title = $psng['title'];
                 $passenger->passenger_name = $psng['passenger_name'];
                 $passenger->ticket = $psng['ticket'];
-                $passenger->payment_type = $psng['payment_type'];
+                $passenger->payment_type = null;
                 $passenger->remarks = $psng['remarks'];
                 $passenger->processed_by = Auth::user()->id;
                 $passenger->tabinfo_id = $id;
@@ -1104,22 +1293,49 @@ class adminController extends Controller
 
                 $price = Price::where('passenger_id', $passenger->id)->first();
                 if ($price) {
-                    $price->basic = $psng['p_basic'];
-                    $price->tax = $psng['p_tax'];
-                    $price->discount = $psng['p_discount'];
+                    $price->basic = null;
+                    $price->tax = null;
+                    $price->discount = null;
                     $price->value = $psng['p_value'];
                     $price->passenger_id = $passenger->id;
                     $price->save();
+
+
+                    $pay_history = PaymentHistory::where('passenger_id', $passenger->id)->first();
+                    $tabinfo = Tabinfo::find($id);
+                    $customer = Customer::where('email', $tabinfo->user->email)->first();
+                    if ($tabinfo) {
+                        $paid = 0;
+                        if ($tabinfo->tabtype_id == 2 || $tabinfo->tabtype_id == 3) {
+                            $paid = $pay_history->credit - $price->value;
+                            $pay_history->credit = $price->value;
+                            $customer->credit_limit = $customer->credit_limit + $paid;
+                            $customer->balance = $customer->balance + $paid;
+                            $pay_history->balance = $customer->balance + $paid;
+                            $customer->save();
+                        } else {
+                            $paid = $pay_history->debit - $price->value;
+                            $pay_history->debit = $price->value;
+                            $customer->credit_limit = $customer->credit_limit + $paid;
+                            $balance = $customer->balance + $paid;
+                            $customer->balance = $balance;
+                            $pay_history->balance = $balance;
+                            $customer->save();
+                        }
+                        $pay_history->user_id = $tabinfo->user_id;
+                    }
+                    $pay_history->passenger_id = $passenger->id;
+                    $pay_history->save();
                 }
                 $vendor = Vendor::where('passenger_id', $passenger->id)->first();
                 if ($vendor) {
-                    $vendor->basic = $psng['v_basic'];
-                    $vendor->v_payment_type = $psng['v_payment_type'];
-                    $vendor->tax = $psng['v_tax'];
-                    $vendor->discount = $psng['v_discount'];
+                    $vendor->basic = null;
+                    $vendor->v_payment_type = null;
+                    $vendor->tax = null;
+                    $vendor->discount = null;
                     $vendor->value = $psng['v_value'];
                     $vendor->passenger_id = $passenger->id;
-                    $vendor->vendor_id = $psng['vendor_id'];
+                    $vendor->vendor_id = null;
                     $vendor->save();
                 }
             }
@@ -1132,47 +1348,56 @@ class adminController extends Controller
         $booking = Booking::all();
         $airline = Airline::all();
         $ticket_type = TicketType::all();
-        $customers = Customer::all();
+        $users = User::where('role', 0)->get();
+        $customers = [];
+        if ($users) {
+            $i = 0;
+            foreach ($users as $user) {
+                $customers[$i] = Customer::where('email', $user->email)->first();
+                $i++;
+            }
+        }
         $ledgers = Ledger::all();
-        return view('admin.request_manual')->with(['booking' => $booking, 'airline' => $airline, 'ticket_type' => $ticket_type, 'customers' => $customers, 'legers' => $ledgers]);
+        // dd($customers);
+        $users = User::where('role', 0)->get();
+        return view('admin.request_manual')->with(['booking' => $booking, 'airline' => $airline, 'ticket_type' => $ticket_type, 'customers' => $customers, 'legers' => $ledgers, 'users' => $users]);
     }
 
     public function saveManualRequest(Request $request)
     {
-        $tabinfo = $request->data['tabinfo'];
+        $tabinfo = $request->data['ledger'];
         if ($tabinfo) {
             $tabinfo = $tabinfo[0];
             // dd($tabinfo[0]['airline_id']);
             $tab = new Tabinfo();
+            $customer = Customer::where('agency_name', $tabinfo['agency_name'])->first();
+            $user = User::where('email', $customer->email)->first();
             $tab->airline_id = $tabinfo['airline_id'];
             $tab->booking_source_id = $tabinfo['booking_id'];
-            $tab->sector = $tabinfo['sector'];
-            $tab->date = $tabinfo['date'];
+            // $tab->sector = $tabinfo['sector'];
+            $tab->date = $tabinfo['dep_date'];
             $tab->passenger_name = $tabinfo['passenger_name'];
             $tab->pnr = $tabinfo['pnr'];
-            $tab->user_id = $tabinfo['user_id'];
+            $tab->user_id = $user->id;
             $tab->processed_by = auth()->user()->id;
-            $tab->tabtype_id = $tabinfo['tabtype_id'];
+            $tab->tabtype_id = $tabinfo['transaction'];
             $result = $tab->save();
             if ($result) {
-                $ledgers = $request->data['ledger'];
-                foreach ($ledgers as $ledger) {
-                    $lg = new Ledger();
-                    $lg->date = $ledger['date'];
-                    $lg->transaction = $ledger['transaction'];
-                    $lg->agency_name = $ledger['agency_name'];
-                    $lg->booking_id = $ledger['booking_id'];
-                    $lg->airline_id = $ledger['airline_id'];
-                    $lg->ticketType_id = $ledger['ticket_type'];
-                    $lg->pnr = $ledger['pnr'];
-                    $lg->to = $ledger['to'];
-                    $lg->from = $ledger['from'];
-                    $lg->dep_date = $ledger['dep_date'];
-                    $lg->arr_date = $ledger['arr_date'];
-                    $lg->processed_by = auth()->user()->id;
-                    $lg->tabinfo_id = $tab->id;
-                    $lg->save();
-                }
+                $lg = new Ledger();
+                $lg->date = $tabinfo['date'];
+                $lg->transaction = $tabinfo['transaction'];
+                $lg->agency_name = $tabinfo['agency_name'];
+                $lg->booking_id = $tabinfo['booking_id'];
+                $lg->airline_id = $tabinfo['airline_id'];
+                $lg->ticketType_id = $tabinfo['ticket_type'];
+                $lg->pnr = $tabinfo['pnr'];
+                // $lg->to = $tabinfo['to'];
+                // $lg->from = $tabinfo['from'];
+                $lg->dep_date = $tabinfo['dep_date'];
+                $lg->arr_date = $tabinfo['arr_date'];
+                $lg->processed_by = auth()->user()->id;
+                $lg->tabinfo_id = $tab->id;
+                $lg->save();
 
                 $passengers = $request->data['passenger'];
                 foreach ($passengers as $passenger) {
@@ -1181,26 +1406,52 @@ class adminController extends Controller
                     $psng->title = $passenger['title'];
                     $psng->passenger_name = $passenger['passenger_name'];
                     $psng->ticket = $passenger['ticket'];
-                    $psng->payment_type = $passenger['payment_type'];
+                    $psng->payment_type = null;
                     $psng->remarks = $passenger['remarks'];
                     $psng->processed_by = Auth::user()->id;
                     $psng->tabinfo_id = $tab->id;
                     $psng->save();
 
                     $price = new Price();
-                    $price->basic = $passenger['p_basic'];
-                    $price->tax = $passenger['p_tax'];
-                    $price->discount = $passenger['p_discount'];
+                    $price->basic = null;
+                    $price->tax = null;
+                    $price->discount = null;
                     $price->value = $passenger['p_value'];
                     $price->passenger_id = $psng->id;
                     // $price->passenger_id = 10;
                     $price->save();
 
+
+
+                    $pay_history = new PaymentHistory;
+                    // $customer = Customer::where('email', $tabinfo->user->email)->first();
+                    if ($tab) {
+                        $paid = 0;
+                        if ($tab->tabtype_id == 2 || $tab->tabtype_id == 3 || $tab->tabtype_id == 8 || $tab->tabtype_id == 16) {
+                            $pay_history->credit = $price->value;
+                            $customer->credit_limit = floatval($customer->credit_limit) + floatval($price->value);
+                            $paid = floatval($customer->balance) + floatval($price->value);
+                            $customer->balance = $paid;
+                            $pay_history->balance = $paid;
+                            $customer->save();
+                        } else {
+                            $pay_history->debit = $price->value;
+                            $customer->credit_limit = floatval($customer->credit_limit) - floatval($price->value);
+                            $paid = floatval($customer->balance) - floatval($price->value);
+                            $customer->balance = $paid;
+                            $pay_history->balance = $paid;
+                            $customer->save();
+                        }
+                        $pay_history->user_id = $tab->user_id;
+                    }
+                    $pay_history->passenger_id = $psng->id;
+                    $pay_history->save();
+
                     $vendor = new Vendor();
-                    $vendor->basic = $passenger['v_basic'];
-                    $vendor->v_payment_type = $passenger['v_payment_type'];
-                    $vendor->tax = $passenger['v_tax'];
-                    $vendor->discount = $passenger['v_discount'];
+                    $vendor->basic = null;
+                    $vendor->v_payment_type = null;
+                    $vendor->tax = null;
+                    $vendor->discount = null;
                     $vendor->value = $passenger['v_value'];
                     $vendor->passenger_id = $psng->id;
                     // $vendor->passenger_id = 12;
@@ -1227,12 +1478,108 @@ class adminController extends Controller
 
 
 
+    public function upload_visiting_image(Request $request)
+    {
+        $image = $request->file('file');
+        $imageName = $image->getClientOriginalName();
+        $image->move(public_path('images'), $imageName);
+        $filesize = filesize(public_path('images/' . $imageName));
+        return response()->json([
+            'image' => $imageName,
+            'filesize' => $filesize
+        ]);
+    }
+
+    public function delete_visiting_image($filename)
+    {
+        File::delete(public_path('/images/' . $filename));
+        $customer = Customer::where('visiting_card', $filename)->first();
+        $customer->visiting_card = NULL;
+        $customer->save();
+        return response()->json('image deleted');
+    }
+    public function upload_agency_image(Request $request)
+    {
+        $image = $request->file('file');
+        $imageName = $image->getClientOriginalName();
+        $image->move(public_path('images'), $imageName);
+        $filesize = filesize(public_path('images/' . $imageName));
+        return response()->json([
+            'image' => $imageName,
+            'filesize' => $filesize
+        ]);
+    }
+    public function delete_agency_image($filename)
+    {
+        File::delete(public_path('/images/' . $filename));
+        $customer = Customer::where('agency_picture', $filename)->first();
+        $customer->agency_picture = NULL;
+        $customer->save();
+        return response()->json('image deleted');
+    }
+
+
+    public function adminLedger()
+    {
+        $tabinfo = Tabinfo::where(['status_id' => 6])->get();
+        foreach ($tabinfo as $info) {
+            $user = User::withTrashed()->find($info->user_id);
+            $info->customer = Customer::withTrashed()->where('email', $user->email)->first();
+            if ($info->tabtype_id == 5) {
+                $info->payment = Payment::where('tabinfo_id', $info->id)->first();
+                if ($info->payment) {
+                    $info->payment->payment_history = PaymentHistory::where('payment_id', $info->payment->id)->first();
+                    $info->payment->bank = Bank::find($info->payment->bank);
+                }
+            } else {
+                $info->ledger = Ledger::where('tabinfo_id', $info->id)->first();
+                if ($info->ledger) {
+                    $ledger = Ledger::find($info->ledger->id);
+                    $info->ticket_type = TicketType::find($ledger->ticketType_id);
+                }
+
+
+                // dd($info->ticket_type);
+                $info->passengers = Passenger::where('tabinfo_id', $info->id)->get();
+                if ($info->passengers) {
+                    foreach ($info->passengers as $passenger) {
+                        $passenger->payment_history = PaymentHistory::where('passenger_id', $passenger->id)->first();
+                        $passenger->balance = Price::where('passenger_id', $passenger->id)->first();
+                        if ($info->tabtype_id === 2) {
+                            $info->credit = $passenger->balance->value;
+                            $info->debit = '';
+                        } else {
+                            $info->debit = $passenger->balance->value;
+                            $info->credit = '';
+                        }
+                        $passenger->vendor = Vendor::where('passenger_id', $passenger->id)->first();
+                    }
+                } else {
+                    $info->balance = NULL;
+                }
+            }
+        }
+        // $data = User::find(Auth::user()->id);
+        // $customer = Customer::where('email', $data->email)->first();
+        // dd($tabinfo[0]->passenger->payment_history);
+        // $ledger = Ledger::whereIn('tabinfo_id', $tabinfo->id)->get();
+        // foreach ($tabinfo as $info) {
+        //     if ($info->passenger->payment_history) {
+        //         print_r($info->passenger->payment_history->credit);
+        //     }
+        // }
+        // dd($tabinfo);
+
+        return view('admin.ledger')->with(['data' => $tabinfo]);
+    }
 
 
 
-
-
-
+    public function deleteCustomer()
+    {
+        $user = User::where('email', 'uneeb@gmail.com')->get();
+        dd($user);
+    }
 
 
 

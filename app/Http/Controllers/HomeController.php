@@ -43,12 +43,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $data = Tabinfo::where('user_id', Auth::user()->id)->latest('date')->get();
+        $data = Tabinfo::where('user_id', Auth::user()->id)->where('tabtype_id', '!=', 5)->latest('date')->get();
         foreach ($data as $record) {
             $record->all_airline = Airline::find($record->airline_id);
             $record->all_booking = Booking::find($record->booking_source_id);
             $record->payment = Payment::find($record->amount);
-            
+
             if (isset($record->processed_by)) {
                 $record->processed_by = User::find($record->processed_by);
             }

@@ -139,7 +139,7 @@
                                         <a href="{{ url('UserProfile') }}" class="dropdown-item">Profile</a>
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                                                                                                                                                                                                           document.getElementById('logout-form').submit();">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
 
@@ -166,6 +166,9 @@
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title">Ledger</h4>
+                                <br />
+                                <a href="/downloadPdf" style="color:blue; padding:10px;">Download PDF</a>
+                                <a href="/exportLedger" style="color:blue; padding:10px;">Download Excel</a>
                             </div>
                             <div class="card-body">
                                 <table border="0" cellspacing="5" cellpadding="5">
@@ -201,50 +204,100 @@
                                             @if ($data && isset($data))
                                                 <?php $i = 1; ?>
                                                 @foreach ($data as $record)
-                                                    @if ($record->ledger && $record->passenger)
-                                                        <tr
-                                                            class="
-                                                        @if (Carbon\Carbon::createFromFormat('Y-m-d', $record->ledger->dep_date)->isToday()) bg-dark text-light @endif">
-                                                            <td>{{ $i }} <?php $i++; ?></td>
-                                                            <td>{{ $record->date }}</td>
-                                                            <td>
-                                                                @if ($record->ledger)
-                                                                    {{ $record->ledger->transaction }}
-                                                                @endif
-                                                            </td>
-                                                            <td>
-                                                                @if ($record->passenger)
-                                                                    {{ $record->passenger->title }}
-                                                                    <span>{{ $record->passenger->passenger_name }}</span>
-                                                                    ~
-                                                                    <span>{{ $record->ledger->from }}</span> ~
-                                                                    <span>{{ $record->ledger->to }}</span>~
-                                                                    <span>{{ $record->pnr }}</span>~
-                                                                    @if ($record->ticket_type && isset($record->ticket_type))
-                                                                        <span>{{ $record->ticket_type->name }}</span>
+                                                    @if ($record->ledger && $record->passengers)
+                                                        @foreach ($record->passengers as $passenger)
+                                                            <tr>
+                                                                <td>
+                                                                    @if ($passenger->payment_history)
+                                                                        {{ $passenger->payment_history->id }}
                                                                     @endif
+                                                                </td>
+                                                                <td>{{ $record->date }}</td>
+                                                                <td>
+                                                                    @if ($record->ledger)
+                                                                        {{ $record->tabtype->tab_name }}
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    @if ($passenger)
+                                                                        {{ $passenger->title }}
+                                                                        <span>{{ $passenger->passenger_name }}</span>
+                                                                        ~
+                                                                        <span>{{ $record->ledger->from }}</span> ~
+                                                                        <span>{{ $record->ledger->to }}</span>~
+                                                                        <span>{{ $record->pnr }}</span>~
+                                                                        @if ($record->ticket_type && isset($record->ticket_type))
+                                                                            <span>{{ $record->ticket_type->name }}</span>
+                                                                        @endif
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    @if ($record->ledger)
+                                                                        {{ $record->ledger->dep_date }}
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    @if ($record->ledger)
+                                                                        {{ $record->ledger->arr_date }}
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    @if ($passenger->payment_history)
+                                                                        {{ round($passenger->payment_history->debit) }}
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    @if ($passenger->payment_history)
+                                                                        {{ round($passenger->payment_history->credit) }}
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    @if ($passenger->payment_history)
+                                                                        {{ round($passenger->payment_history->balance) }}
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    @if ($passenger && $passenger->remarks && isset($passenger->remarks))
+                                                                        {{ $passenger->remarks }}
+                                                                    @else
+                                                                        No Remarks
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    @elseif ($record->tabtype_id == 5 && $record->payment)
+                                                        <tr>
+                                                            <td>{{ $record->payment->payment_history->id }}</td>
+                                                            <td>{{ $record->payment->payment_date }}</td>
+                                                            <td>
+                                                                Credit
+                                                            </td>
+                                                            <td>
+                                                                ONLINE REDCIEVED IN SALAM TRAVEL
+                                                                {{ $record->payment->bank->bank_name }}
+                                                            </td>
+                                                            <td>
+                                                            </td>
+                                                            <td>
+                                                            </td>
+                                                            <td>
+                                                                @if ($record->payment->payment_history)
+                                                                    {{ round($record->payment->payment_history->debit) }}
                                                                 @endif
                                                             </td>
                                                             <td>
-                                                                @if ($record->ledger)
-                                                                    {{ $record->ledger->dep_date }}
+                                                                @if ($record->payment->payment_history)
+                                                                    {{ round($record->payment->payment_history->credit) }}
                                                                 @endif
                                                             </td>
                                                             <td>
-                                                                @if ($record->ledger)
-                                                                    {{ $record->ledger->arr_date }}
-                                                                @endif
-                                                            </td>
-                                                            <td>--</td>
-                                                            <td>--</td>
-                                                            <td>
-                                                                @if ($record->balance)
-                                                                    {{ $record->balance->value }}
+                                                                @if ($record->payment->payment_history)
+                                                                    {{ round($record->payment->payment_history->balance) }}
                                                                 @endif
                                                             </td>
                                                             <td>
-                                                                @if ($record->passenger && $record->passenger->remarks && isset($record->passenger->remarks))
-                                                                    {{ $record->passenger->remarks }}
+                                                                @if ($record->payment && $record->payment->remarks && isset($record->payment->remarks))
+                                                                    {{ $record->payment->remarks }}
                                                                 @else
                                                                     No Remarks
                                                                 @endif
@@ -266,7 +319,8 @@
             <footer class="footer">
                 <div class=" container-fluid ">
                     <div class="copyright" id="copyright">
-                       @<script>
+                        @
+                        <script>
                             document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))
                         </script>, Developed by <a href="https://therevolutiontechnologies.com"
                             target="_blank">The Revolution Technologies</a>

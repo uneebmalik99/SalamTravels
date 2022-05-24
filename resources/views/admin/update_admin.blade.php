@@ -90,6 +90,13 @@
                             <p>Request Manual</p>
                         </a>
                     </li>
+
+                    <li>
+                        <a href="{{ url('admin/ledger') }}">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <p>Ledger</p>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -140,7 +147,7 @@
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                                                                                                                       document.getElementById('logout-form').submit();">
+                                                                                                                                                           document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
 
@@ -155,8 +162,8 @@
                     </div>
                 </div>
             </nav>
-            <!-- End Navbar -->   
-                                <!--  settings test-->   
+            <!-- End Navbar -->
+            <!--  settings test-->
             <div class="content">
                 <div class="row">
                     <div class="col-md-12">
@@ -176,7 +183,7 @@
                         @if (isset($errors) && count($errors) > 0)
                             {{ $errors }}
                         @endif
-                        <div class="card"> 
+                        <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title text-center">Update Sub Admin</h4>
                             </div>
@@ -195,15 +202,16 @@
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                                             <div class="form-group">
                                                 <label class="control-label" for="phone">Email</label>
-                                                <input name="email" id="email" type="email" placeholder="Email"  value="test Email"
-                                                    class="form-control" required>
+                                                <input name="email" id="email" type="email" placeholder="Email"
+                                                    value="test Email" class="form-control" required>
                                             </div>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                                             <div class="form-group">
                                                 <label class="control-label" for="phone">Password</label>
-                                                <input name="password" id="password" type="password" value="test Password"
-                                                    placeholder="Password" class="form-control" required>
+                                                <input name="password" id="password" type="password"
+                                                    value="test Password" placeholder="Password" class="form-control"
+                                                    required>
                                             </div>
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
@@ -244,7 +252,8 @@
             <footer class="footer">
                 <div class=" container-fluid ">
                     <div class="copyright" id="copyright">
-                        @<script>
+                        @
+                        <script>
                             document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))
                         </script>, Developed by <a href="https://therevolutiontechnologies.com"
                             target="_blank">The Revolution Technologies</a>

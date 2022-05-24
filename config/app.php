@@ -100,7 +100,7 @@ return [
     | Faker Locale
     |--------------------------------------------------------------------------
     |
-    | This locale will be used by the Faker PHP library when generating fake
+    | This locale will be used by the Faker PHP libr['data' => $tabinfo, 'customer' => $customer]ary when generating fake
     | data for your database seeds. For example, this will be used to get
     | localized telephone numbers, street address information and more.
     |
@@ -165,7 +165,8 @@ return [
         /*
          * Package Service Providers...
          */
-
+        Barryvdh\DomPDF\ServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -177,7 +178,7 @@ return [
 
     ],
 
-    /*
+    /*Maatwebsite\Excel\ExcelServiceProvider::class,
     |--------------------------------------------------------------------------
     | Class Aliases
     |--------------------------------------------------------------------------
@@ -228,7 +229,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
+        'PDF' => Barryvdh\DomPDF\Facade::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];

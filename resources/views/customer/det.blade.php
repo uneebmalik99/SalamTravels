@@ -175,7 +175,7 @@
 
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       document.getElementById('logout-form').submit();">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
 
@@ -453,7 +453,7 @@
                                     </div>
                                     <div class="col-7">
                                         <p>{{ $tabinfo->date }}
-                                        </p> 
+                                        </p>
                                         {{-- <p>{{ $tabinfo->created_at }}</p> --}}
                                     </div>
                                 </div>
@@ -495,42 +495,7 @@
                         <div class="col-4">
                             <div class="row d-flex">
                                 <div class="col-5">
-                                    <p>P.Type</p>
-                                </div>
-                                <div class="col-3">
-                                    <p>Basic</p>
-                                </div>
-                                <div class="col-3">
-                                    <p>Tax</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="row d-flex">
-                                <div class="col-3">
-                                    <p>Discount</p>
-                                </div>
-                                <div class="col-3">
-                                    <p>Value</p>
-                                </div>
-                                <div class="col-5">
-                                    <p>Vendor</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="row d-flex">
-                                <div class="col-3">
-                                    <p>Basic</p>
-                                </div>
-                                <div class="col-3">
-                                    <p>Tax</p>
-                                </div>
-                                <div class="col-3">
-                                    <p>Discount</p>
-                                </div>
-                                <div class="col-3">
-                                    <p>Value</p>
+                                    <p>Amount</p>
                                 </div>
                             </div>
                         </div>
@@ -561,6 +526,12 @@
                             <div class="col-4">
                                 <div class="row d-flex">
                                     <div class="col-5">
+                                        <p>{{ $passenger->price->value }}</p>
+                                    </div>
+                                    {{-- <div class="col-5">
+                                        <p>{{ $passenger->vendor->value }}</p>
+                                    </div> --}}
+                                    {{-- <div class="col-5">
                                         <p>{{ $passenger->payment_type }}</p>
                                     </div>
                                     <div class="col-3">
@@ -568,47 +539,19 @@
                                     </div>
                                     <div class="col-3">
                                         <p>{{ $passenger->price->tax }}</p>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
-                            <div class="col-4">
+                            {{-- <div class="col-4">
                                 <div class="row d-flex">
-                                    <div class="col-3">
+                                    <div class="col-4">
                                         <p>{{ $passenger->price->discount }}</p>
                                     </div>
-                                    <div class="col-3">
+                                    <div class="col-4">
                                         <p>{{ $passenger->price->value }}</p>
                                     </div>
-                                    <div class="col-5">
-                                        {{-- <select class="form-control" name="vendor_id" required>
-                                                <option disabled>--Select Vendor --</option>
-                                                @if ($vendor)
-                                                    @foreach ($vendor as $vend)
-                                                        <option value="{{ $vend->id }}"
-                                                            @if ($passenger->vendor->vendor_id == $vend->id) selected @endif>
-                                                            {{ $vend->name }}</option>
-                                                    @endforeach
-                                                @endif
-                                            </select> --}}
-                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="row d-flex">
-                                    <div class="col-3">
-                                        <p>{{ $passenger->vendor->basic }}</p>
-                                    </div>
-                                    <div class="col-3">
-                                        <p>{{ $passenger->vendor->tax }}</p>
-                                    </div>
-                                    <div class="col-3">
-                                        <p>{{ $passenger->vendor->discount }}</p>
-                                    </div>
-                                    <div class="col-3">
-                                        <p>{{ $passenger->vendor->value }}</p>
-                                    </div>
-                                </div>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="col-4">
@@ -627,8 +570,8 @@
                     <div class="copyright" id="copyright">
                         <script>
                             document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))
-                        </script>, Developed by <a
-                            href="https://therevolutiontechnologies.com" target="_blank">The
+                        </script>, Developed by <a href="https://therevolutiontechnologies.com"
+                            target="_blank">The
                             Revolution Technologies</a>
                     </div>
                 </div>

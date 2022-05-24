@@ -112,6 +112,13 @@
                             <p>Request Manual</p>
                         </a>
                     </li>
+
+                    <li>
+                        <a href="{{ url('admin/ledger') }}">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <p>Ledger</p>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -176,7 +183,7 @@
 
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       document.getElementById('logout-form').submit();">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
 
@@ -229,70 +236,73 @@
                                             <div class="form-group">
                                                 <label class="font-weight-bold label">Transaction</label>
                                                 <select name="transaction" id="transaction" class="form-control"
-                                                    required>
-                                                    <option value="TICKET"
-                                                        @if ($ledger->transaction == 'TICKET') selected @endif>TICKET
+                                                    disabled required>
+                                                    <option value="1" @if ($ledger->transaction == 1) selected @endif>
+                                                        TICKET
                                                     </option>
-                                                    <option value="DATE-CHANGE"
-                                                        @if ($ledger->transaction == 'DATE-CHANGE') selected @endif> DATE
+                                                    <option value="4" @if ($ledger->transaction == 4) selected @endif>
+                                                        DATE
                                                         CHANGE</option>
                                                     <option value="APPROVAL"
-                                                        @if ($ledger->transaction == 'APPROVAL') selected @endif> APPROVAL
+                                                        @if ($ledger->transaction == 6) selected @endif>
+                                                        APPROVAL
                                                     </option>
                                                     <option value="BAGGAGE"
-                                                        @if ($ledger->transaction == 'BAGGAGE') selected @endif>BAGGAGE
+                                                        @if ($ledger->transaction == 7) selected @endif>
+                                                        BAGGAGE
                                                     </option>
                                                     <option value="CREDIT"
-                                                        @if ($ledger->transaction == 'CREDIT') selected @endif>CREDIT
+                                                        @if ($ledger->transaction == 8) selected @endif>
+                                                        CREDIT
                                                     </option>
                                                     <option value="DEBIT"
-                                                        @if ($ledger->transaction == 'DEBIT') selected @endif>DEBIT
+                                                        @if ($ledger->transaction == 9) selected @endif>
+                                                        DEBIT
                                                     </option>
                                                     <option value="OK-TO-BOARD"
-                                                        @if ($ledger->transaction == 'OK-TO-BOARD') selected @endif>OK TO
+                                                        @if ($ledger->transaction == 10) selected @endif>OK
+                                                        TO
                                                         BOARD</option>
                                                     <option value="INSURANCE"
-                                                        @if ($ledger->transaction == 'INSURANCE') selected @endif>INSURANCE
+                                                        @if ($ledger->transaction == 11) selected @endif>
+                                                        INSURANCE
                                                     </option>
                                                     <option value="PL-UK-FORM"
-                                                        @if ($ledger->transaction == 'PL-UK-FORM') selected @endif>PL UK
+                                                        @if ($ledger->transaction == 12) selected @endif>PL
+                                                        UK
                                                         FORM</option>
                                                     <option value="HOTEL_RES"
-                                                        @if ($ledger->transaction == 'HOTEL_RES') selected @endif>HOTEL RES
+                                                        @if ($ledger->transaction == 13) selected @endif>
+                                                        HOTEL RES
                                                     </option>
                                                     <option value="VISA"
-                                                        @if ($ledger->transaction == 'VISA') selected @endif>VISA
+                                                        @if ($ledger->transaction == 14) selected @endif>
+                                                        VISA
                                                     </option>
                                                     <option value="COVID-19"
-                                                        @if ($ledger->transaction == 'COVID-19') selected @endif>COVID-19
+                                                        @if ($ledger->transaction == 15) selected @endif>
+                                                        COVID-19
                                                     </option>
-                                                    <option value="REFUND"
-                                                        @if ($ledger->transaction == 'REFUND') selected @endif>REFUND
+                                                    <option value="2"
+                                                        @if ($ledger->transaction == 2) selected @endif>REFUND
                                                     </option>
-                                                    <option value="VOID"
-                                                        @if ($ledger->transaction == 'VOID') selected @endif>VOID
+                                                    <option value="3"
+                                                        @if ($ledger->transaction == 3) selected @endif>VOID
                                                     </option>
                                                     <option value="ADJUSTMENT"
-                                                        @if ($ledger->transaction == 'ADJUSTMENT') selected @endif>
+                                                        @if ($ledger->transaction == 16) selected @endif>
                                                         ADJUSTMENT</option>
                                                     <option value="OTHERS"
-                                                        @if ($ledger->transaction == 'OTHERS') selected @endif>OTHERS
+                                                        @if ($ledger->transaction == 18) selected @endif>
+                                                        OTHERS
                                                     </option>
                                                     <option value="UMRAH"
-                                                        @if ($ledger->transaction == 'UMRAH') selected @endif>UMRAH
+                                                        @if ($ledger->transaction == 17) selected @endif>
+                                                        UMRAH
                                                     </option>
                                                 </select>
-                                                {{-- <input type="text" name="transaction" class="form-control"
-                                                        value="{{ $ledger->transaction }}" required /> --}}
                                             </div>
                                         </div>
-                                        {{-- <div class="col-12 col-md-6">
-                                                <div class="form-group">
-                                                    <label class="font-weight-bold label">Agency
-                                                        Name</label>
-                                                </div>
-                                            </div> --}}
-
                                         <div class="col-12 col-md-6">
                                             <div class="form-group">
                                                 <label class="font-weight-bold label">Booking
@@ -345,7 +355,7 @@
                                         </div>
                                         <div class="col-12 col-md-6">
                                             <div class="form-group">
-                                                <label class="font-weight-bold label">pnr</label>
+                                                <label class="font-weight-bold label">Pnr</label>
                                                 <input type="text" name="pnr" id="pnr" class="form-control"
                                                     value="{{ $ledger->pnr }}" required />
                                             </div>
@@ -466,15 +476,9 @@
                                         </div>
                                         <div class="col-12 col-md-6">
                                             <div class="form-group">
-                                                <label class="font-weight-bold label">pnr</label>
+                                                <label class="font-weight-bold label">Pnr</label>
                                                 <input type="text" name="pnr" id="pnr" class="form-control"
                                                     required />
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-md-6">
-                                            <div class="form-group">
-                                                <label class="font-weight-bold label">To</label>
-                                                <input type="text" name="to" id="to" class="form-control" required />
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-6">
@@ -482,6 +486,12 @@
                                                 <label class="font-weight-bold label">From</label>
                                                 <input type="text" name="from" id="from" class="form-control"
                                                     required />
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">To</label>
+                                                <input type="text" name="to" id="to" class="form-control" required />
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-6">
@@ -606,41 +616,47 @@
 
                 </div>
                 <div class="horizontal-scrollable bg-white p-3">
-                    <div class="row d-flex">
-                        <div class="col-md-4">
-                            <select name="total_passenger" id="total_passenger" class="form-control total_passenger">
-                                <option selected disabled>Select # of passengers</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                <option value="6">6</option>
-                                <option value="7">7</option>
-                                <option value="8">8</option>
-                                <option value="9">9</option>
-                                <option value="10">10</option>
-                                <option value="10">10</option>
-                                <option value="12">12</option>
-                                <option value="13">13</option>
-                                <option value="14">14</option>
-                                <option value="15">15</option>
-                                <option value="16">16</option>
-                                <option value="17">17</option>
-                                <option value="18">18</option>
-                                <option value="19">19</option>
-                                <option value="20">20</option>
-                            </select>
-                        </div>
-                        <div class="col-md-5 d-flex">
-                            <p id="nopas">0</p>
-                            <p> &nbsp; of 20</p>
-                        </div>
+                    {{-- {{ count($passengers) }} --}}
+                    @if ($passengers && isset($passengers) && count($passengers) > 0)
+                        <div class="d-flex"></div>
+                    @else
+                        <div class="row d-flex">
+                            <div class="col-md-4">
+                                <select name="total_passenger" id="total_passenger"
+                                    class="form-control total_passenger">
+                                    <option selected disabled>Select # of passengers</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="10">10</option>
+                                    <option value="12">12</option>
+                                    <option value="13">13</option>
+                                    <option value="14">14</option>
+                                    <option value="15">15</option>
+                                    <option value="16">16</option>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                    <option value="20">20</option>
+                                </select>
+                            </div>
+                            <div class="col-md-5 d-flex">
+                                <p id="nopas">0</p>
+                                <p> &nbsp; of 20</p>
+                            </div>
 
-                        <div class="col-md-3">
+                            <div class="col-md-3">
 
+                            </div>
                         </div>
-                    </div>
+                    @endif
                     <div class="row text-center">
                         <div class="col-8">
                             <div class="row d-flex">
@@ -663,110 +679,54 @@
                         </div>
 
                         <div class="col-4">
-                            <div class="row d-flex">
-                                <div class="col-5">
-                                    <p>P.Type</p>
-                                </div>
-                                <div class="col-3">
-                                    <p>Basic</p>
-                                </div>
-                                <div class="col-3">
-                                    <p>Tax</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4 ">
-                            <div class="row d-flex">
+                            <div class="row d-flex mt-2">
                                 <div class="col-4">
-                                    <p>Discount</p>
+                                    <p>Amount</p>
                                 </div>
                                 <div class="col-4">
-                                    <p>Value</p>
+                                    <p>Paid Amount</p>
                                 </div>
                                 <div class="col-4">
                                     <p>Vendor</p>
                                 </div>
                             </div>
                         </div>
-                        {{-- new form start --}}
-
-                        <div class="col-4" style="background: #E5E7E9;">
-                            <div class="row d-flex">
-                                <div class="col-4">
-                                    <p>P.Type</p>
-                                </div>
-                                <div class="col-3">
-                                    <p>Basic</p>
-                                </div>
-                                <div class="col-4">
-                                    <p>Tax</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4 " style="background: #E5E7E9; margin-left:-5px">
-                            <div class="row d-flex">
-                                <div class="col-4">
-                                    <p>Discount</p>
-                                </div>
-                                <div class="col-5">
-                                    <p>Value</p>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        {{-- <div class="col-4 ">   // third form
-                            <div class="row d-flex " style="background: #E5E7E9;">
-                                <div class="col-3">
-                                    <p>P.Type</p>
-                                </div>
-                                <div class="col-2">
-                                    <p>Basic</p>
-                                </div>
-                                <div class="col-2">
-                                    <p>Tax</p>
-                                </div>
-                                <div class="col-2">
-                                    <p>Discount</p>
-                                </div>
-                                <div class="col-2 ml-3">
-                                    <p>Value</p>
-                                </div>
-                            </div>
-                        </div> --}}
 
                     </div>
                     @if ($passengers && isset($passengers) && count($passengers) > 0)
-                        <?php $i = 1; ?>
                         @foreach ($passengers as $passenger)
                             <div class='passenger-info-update-form'>
                                 <div class="row text-center main_content">
                                     <div class="col-8">
                                         <div class="row d-flex">
                                             <div class="col-1">
-                                                <p>{{ $i }}</p>
                                                 <input type="hidden" name="passenger_id" class="passenger_id"
                                                     value="{{ $passenger->id }}" />
-                                                <?php $i = $i + 1; ?>
+                                                {{-- <?php $i = $i + 1; ?> --}}
                                             </div>
                                             <div class="col-3">
                                                 <select class="form-control type" name="type" required>
                                                     <option value="adult"
-                                                        @if ($passenger->type == 'adult') selected @endif>Adult
+                                                        @if ($passenger->type == 'adult') selected @endif>
+                                                        Adult
                                                     </option>
                                                     <option value="child"
-                                                        @if ($passenger->type == 'child') selected @endif>Child
+                                                        @if ($passenger->type == 'child') selected @endif>
+                                                        Child
                                                     </option>
                                                 </select>
                                             </div>
                                             <div class="col-2">
                                                 <select class="form-control title" name="title" required>
                                                     <option value="mr"
-                                                        @if ($passenger->title == 'mr') selected @endif>MR</option>
+                                                        @if ($passenger->title == 'mr') selected @endif>MR
+                                                    </option>
                                                     <option value="mrs"
-                                                        @if ($passenger->title == 'mrs') selected @endif>Mrs</option>
+                                                        @if ($passenger->title == 'mrs') selected @endif>Mrs
+                                                    </option>
                                                     <option value="miss"
-                                                        @if ($passenger->title == 'miss') selected @endif>Miss
+                                                        @if ($passenger->title == 'miss') selected @endif>
+                                                        Miss
                                                     </option>
                                                 </select>
                                             </div>
@@ -784,92 +744,28 @@
                                     <div class="col-4">
                                         <div class="row d-flex">
                                             <div class="col-4">
-                                                <select class="form-control payment_type" name="payment_type" required>
-                                                    <option disabled> Select payment type</option>
-                                                    <option value="fixed"
-                                                        @if ($passenger->payment_type == 'fixed') selected @endif>Fixed
-                                                    </option>
-                                                    <option value="commision"
-                                                        @if ($passenger->payment_type == 'commision') selected @endif>Commision
-                                                    </option>
-                                                    <option value="discount"
-                                                        @if ($passenger->payment_type == 'discount') selected @endif>Discount
-                                                    </option>
-                                                </select>
-                                            </div>
-                                            <div class="col-4">
-                                                <input type="text" class="form-control p_basic" name="p_basic"
-                                                    value="{{ $passenger->price->basic }}"
-                                                    @if ($passenger->payment_type == 'fixed') disabled @endif />
-                                            </div>
-                                            <div class="col-4">
-                                                <input type="text" class="form-control p_tax" name="p_tax"
-                                                    value="{{ $passenger->price->tax }}"
-                                                    @if ($passenger->payment_type == 'fixed') disabled @endif />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="row d-flex">
-                                            <div class="col-4">
-                                                <input type="text" class="form-control p_discount" name="p_discount"
-                                                    value="{{ $passenger->price->discount }}"
-                                                    @if ($passenger->payment_type == 'fixed') disabled @endif />
-                                            </div>
-                                            <div class="col-4">
                                                 <input type="text" class="form-control p_value" name="p_value"
-                                                    value="{{ $passenger->price->value }}"
-                                                    @if (!$passenger->payment_type == 'fixed') disabled @endif />
+                                                    value="{{ $passenger->price->value }}" />
                                             </div>
+
+                                            <div class="col-4">
+                                                <input type="text" class="form-control v_value" name="v_value"
+                                                    value="@if ($passenger->vendor) {{ $passenger->vendor->value }} @endif" />
+                                            </div>
+
                                             <div class="col-4">
                                                 <select class="form-control vendor_id" name="vendor_id">
                                                     <option disabled>Select Vendor </option>
                                                     @if ($vendor && isset($vendor))
                                                         @foreach ($vendor as $vend)
                                                             <option value="{{ $vend->id }}"
-                                                                @if ($passenger->vendor && $passenger->vendor->vendor_id == $vend->id) selected @endif>
+                                                                @if ($passenger->vendor->vendor_id == $vend->id) selected @endif>
                                                                 {{ $vend->name }}
                                                             </option>
                                                         @endforeach
                                                     @endif
                                                 </select>
                                             </div>
-                                        </div>
-                                    </div>
-                                    {{-- lasst form start --}}
-                                    <div class="col-4" style="background: #E5E7E9;">
-                                        <div class="row d-flex">
-                                            <div class="col-4">
-                                                <select class="form-control v_payment_type" name="v_payment_type"
-                                                    required>
-                                                    <option disabled selected> Select payment type</option>
-                                                    <option value="fixed">Fixed</option>
-                                                    <option value="commision">Commision</option>
-                                                    <option value="discount">Discount</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-4">
-                                                <input type="text" class="form-control v_basic" name="v_basic"
-                                                    value="
-                                                    @if ($passenger->vendor) {{ $passenger->vendor->basic }} @endif" />
-                                            </div>
-                                            <div class="col-4">
-                                                <input type="text" class="form-control v_tax" name="v_tax"
-                                                    value="@if ($passenger->vendor) {{ $passenger->vendor->tax }} @endif" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-4" style="background: #E5E7E9; margin-left:-5px">
-                                        <div class="row d-flex">
-                                            <div class="col-5">
-                                                <input type="text" class="form-control v_discount" name="v_discount"
-                                                    value="@if ($passenger->vendor) {{ $passenger->vendor->discount }} @endif" />
-                                            </div>
-                                            <div class="col-5">
-                                                <input type="text" class="form-control v_value" name="v_value"
-                                                    value="@if ($passenger->vendor) {{ $passenger->vendor->value }} @endif" />
-                                            </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -881,6 +777,8 @@
                                     </div>
 
                                 </div>
+                                {{-- <button class="btn btn-primary updatepassenger" type="button"
+                                    style="z-index: 999 !important;">Submit</button> --}}
                             </div>
                         @endforeach
                         <button type="button" class="btn btn-primary passenger_information">Update</button>
@@ -890,124 +788,7 @@
                         <form id='passenger-form-c' action="{{ url('admin/update_passenger_info/' . $tabinfo->id) }}"
                             method="POST">
                             @csrf
-                            {{-- <div class="row text-center">
-                                <input type="hidden" name="passenger_id" value="{{ $passenger->id }}" />
-                                <div class="col-8">
-                                    <div class="row d-flex">
-                                        <div class="col-1">
-                                            <p>1</p>
-                                        </div>
-                                        <div class="col-2">
-                                            <select class="form-control" name="type" required>
-                                                <option value="adult"
-                                                    @if ($passenger->type === 'adult') selected="selected" @endif>Adult
-                                                </option>
-                                                <option value="child"
-                                                    @if ($passenger->type === 'child') selected="selected" @endif>Child
-                                                </option>
-                                            </select>
-                                        </div>
-                                        <div class="col-2">
-                                            <select class="form-control" name="title" required>
-                                                <option value="mr"
-                                                    @if ($passenger->title === 'mr') selected="selected" @endif>MR
-                                                </option>
-                                                <option value="mrs"
-                                                    @if ($passenger->title === 'mrs') selected="selected" @endif>Mrs
-                                                </option>
-                                                <option value="miss"
-                                                    @if ($passenger->title === 'miss') selected="selected" @endif>Miss
-                                                </option>
-                                            </select>
-                                        </div>
-                                        <div class="col-3">
-                                            <input type="text" class="form-control" name="passenger_name"
-                                                value="{{ $passenger->passenger_name }}" required />
-                                        </div>
-                                        <div class="col-3">
-                                            <input type="text" class="form-control" name="ticket"
-                                                value="{{ $passenger->ticket }}" required />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="row d-flex">
-                                        <div class="col-5">
-                                            <select class="form-control" name="payment_type" required>
-                                                <option value="fixed"
-                                                    @if ($passenger->payment_type === 'fixed') selected="selected" @endif>Fixed
-                                                </option>
-                                                <option value="commision"
-                                                    @if ($passenger->payment_type === 'commision') selected="selected" @endif>
-                                                    Commision</option>
-                                                <option value="discount"
-                                                    @if ($passenger->payment_type === 'discount') selected="selected" @endif>
-                                                    Discount</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-3">
-                                            <input type="text" class="form-control" name="p_basic"
-                                                value="{{ $passenger->price->basic }}" />
-                                        </div>
-                                        <div class="col-3">
-                                            <input type="text" class="form-control" name="p_tax"
-                                                value="{{ $passenger->price->tax }}" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="row d-flex">
-                                        <div class="col-3">
-                                            <input type="text" class="form-control" name="p_discount"
-                                                value="{{ $passenger->price->discount }}" />
-                                        </div>
-                                        <div class="col-3">
-                                            <input type="text" class="form-control" name="p_value"
-                                                value="{{ $passenger->price->value }}" />
-                                        </div>
-                                        <div class="col-5">
-                                            <select class="form-control" name="vendor_id" required>
-                                                <option disabled>--Select Vendor --</option>
-                                                @if ($vendor)
-                                                    @foreach ($vendor as $vend)
-                                                        <option value="{{ $vend->id }}"
-                                                            @if ($passenger->vendor->vendor_id == $vend->id) selected @endif>
-                                                            {{ $vend->name }}</option>
-                                                    @endforeach
-                                                @endif
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="row d-flex">
-                                        <div class="col-3">
-                                            <input type="text" class="form-control" name="v_basic"
-                                                value="{{ isset($passenger->vendor->basic) ? $passenger->vendor->basic : '' }}" />
-                                        </div>
-                                        <div class="col-3">
-                                            <input type="text" class="form-control" name="v_tax"
-                                                value="{{ isset($passenger->vendor->basic) ? $passenger->vendor->tax : '' }}" />
-                                        </div>
-                                        <div class="col-3">
-                                            <input type="text" class="form-control" name="v_discount"
-                                                value="{{ isset($passenger->vendor->basic) ? $passenger->vendor->discount : '' }}" />
-                                        </div>
-                                        <div class="col-3">
-                                            <input type="text" class="form-control" name="v_value"
-                                                value="{{ isset($passenger->vendor->basic) ? $passenger->vendor->value : '' }}" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> --}}
-                            {{-- <div class="col-4">
-                                <div class="form-group">
-                                    <label class="label">Remarks</label>
-                                    <textarea class="form-control border"
-                                        name="remarks">{{ $passenger->remarks }}</textarea>
-                                </div>
 
-                            </div> --}}
                             <button class="btn btn-primary updatepassenger" type="button">Submit</button>
                         </form>
                     @endif
@@ -1070,14 +851,21 @@
             }
         }
         $(document).on('change', '#total_passenger', function(e) {
+            var i = 1;
             var container = $('#passenger-form-container').empty();
-
+            $('#nopas').html($('#total_passenger').val())
+            console.log($('#total_passenger').val())
             const count = $(this).val();
             for (var i = 0; i < count; i++) {
                 addPassengerForm();
-
             }
 
+            var srNum = $('.srNum')
+            srNum.each(function(i, ele) {
+                console.log('element', ele)
+                $(ele).html(i + 1);
+                console.log('index', i)
+            })
             $.ajax({
                 url: '/admin/getVendor',
                 method: 'get',
@@ -1124,11 +912,18 @@
             if (type === 'commision' || type === 'discount') {
                 tax = parseInt($(this).val());
                 basic = parseInt($(this).closest('.main_content').find('.p_basic').val());
-                price = basic + tax;
+                price = basic;
+                let total_price = 0;
                 dis_percentage = parseInt($(this).closest('.main_content').find('.p_discount').val());
                 const finalPrice = dis_percentage * price;
                 const discount = finalPrice / 100;
-                const total_price = price - discount;
+                if (type === 'commision') {
+                    total_price = price + discount + tax;
+
+                } else {
+                    total_price = price - discount + tax;
+
+                }
                 console.log('tex', dis_percentage, price, finalPrice, discount, basic, tax)
                 if (total_price > 0) {
                     $(this).parents('.main_content').find('.p_value').val(total_price);
@@ -1147,11 +942,18 @@
             if (type === 'commision' || type === 'discount') {
                 tax = parseInt($(this).closest('.main_content').find('.p_tax').val());
                 basic = parseInt($(this).val());
-                price = basic + tax;
+                price = basic;
+                let total_price = 0;
                 dis_percentage = parseInt($(this).closest('.main_content').find('.p_discount').val());
                 const finalPrice = dis_percentage * price;
                 const discount = finalPrice / 100;
-                const total_price = price - discount;
+                if (type === 'commision') {
+                    total_price = price + discount + tax;
+
+                } else {
+                    total_price = price - discount + tax;
+
+                }
                 console.log('tex', dis_percentage, price, finalPrice, discount, basic, tax)
                 if (total_price > 0) {
                     $(this).parents('.main_content').find('.p_value').val(total_price);
@@ -1170,11 +972,18 @@
             if (type === 'commision' || type === 'discount') {
                 tax = parseInt($(this).closest('.main_content').find('.p_tax').val());
                 basic = parseInt($(this).closest('.main_content').find('.p_basic').val());
-                price = basic + tax;
+                price = basic;
+                let total_price = 0;
                 let dis_percentage = parseInt($(this).val());
                 const finalPrice = dis_percentage * price;
                 const discount = finalPrice / 100;
-                const total_price = price - discount;
+                if (type === 'commision') {
+                    total_price = price + discount + tax;
+
+                } else {
+                    total_price = price - discount + tax;
+
+                }
                 console.log('tex', dis_percentage, price, finalPrice, discount, basic, tax)
                 if (total_price > 0) {
                     $(this).parents('.main_content').find('.p_value').val(total_price);
@@ -1222,11 +1031,18 @@
             if (type === 'commision' || type === 'discount') {
                 tax = parseInt($(this).val());
                 basic = parseInt($(this).closest('.main_content').find('.v_basic').val());
-                price = basic + tax;
+                price = basic;
+                let total_price = 0;
                 dis_percentage = parseInt($(this).closest('.main_content').find('.v_discount').val());
                 const finalPrice = dis_percentage * price;
                 const discount = finalPrice / 100;
-                const total_price = price - discount;
+                if (type === 'commision') {
+                    total_price = price + discount + tax;
+
+                } else {
+                    total_price = price - discount + tax;
+
+                }
                 console.log('tex', dis_percentage, price, finalPrice, discount, basic, tax)
                 if (total_price > 0) {
                     $(this).parents('.main_content').find('.v_value').val(total_price);
@@ -1247,11 +1063,18 @@
             if (type === 'commision' || type === 'discount') {
                 tax = parseInt($(this).closest('.main_content').find('.v_tax').val());
                 basic = parseInt($(this).val());
-                price = basic + tax;
+                price = basic;
+                let total_price = 0;
                 dis_percentage = parseInt($(this).closest('.main_content').find('.v_discount').val());
                 const finalPrice = dis_percentage * price;
                 const discount = finalPrice / 100;
-                const total_price = price - discount;
+                if (type === 'commision') {
+                    total_price = price + discount + tax;
+
+                } else {
+                    total_price = price - discount + tax;
+
+                }
                 console.log('tex', dis_percentage, price, finalPrice, discount, basic, tax)
                 if (total_price > 0) {
                     $(this).parents('.main_content').find('.v_value').val(total_price);
@@ -1270,11 +1093,18 @@
             if (type === 'commision' || type === 'discount') {
                 tax = parseInt($(this).closest('.main_content').find('.v_tax').val());
                 basic = parseInt($(this).closest('.main_content').find('.v_basic').val());
-                price = basic + tax;
+                price = basic;
+                let total_price = 0;
                 let dis_percentage = parseInt($(this).val());
                 const finalPrice = dis_percentage * price;
                 const discount = finalPrice / 100;
-                const total_price = price - discount;
+                if (type === 'commision') {
+                    total_price = price + discount + tax;
+
+                } else {
+                    total_price = price - discount + tax;
+
+                }
                 console.log('tex', dis_percentage, price, finalPrice, discount, basic, tax)
                 if (total_price > 0) {
                     $(this).parents('.main_content').find('.v_value').val(total_price);
@@ -1408,15 +1238,7 @@
                 obj.type = $(v).find('.type').val();
                 obj.ticket = $(v).find('.ticket').val();
                 obj.passenger_name = $(v).find('.passenger_name').val();
-                obj.payment_type = $(v).find('.payment_type').val();
-                obj.p_basic = $(v).find('.p_basic').val();
-                obj.p_tax = $(v).find('.p_tax').val();
-                obj.p_discount = $(v).find('.p_discount').val();
                 obj.p_value = $(v).find('.p_value').val();
-                obj.v_payment_type = $(v).find('.v_payment_type').val();
-                obj.v_basic = $(v).find('.v_basic').val();
-                obj.v_tax = $(v).find('.v_tax').val();
-                obj.v_discount = $(v).find('.v_discount').val();
                 obj.v_value = $(v).find('.v_value').val();
                 obj.remarks = $(v).find('.remarks').val();
                 obj.vendor_id = $(v).find('.vendor_id').val();
@@ -1471,7 +1293,7 @@
                 <div class="col-8">
                     <div class="row d-flex">
                         <div class="col-1">
-                            <p>1</p>
+                            <p class="srNum"></p>
                         </div>
                         <div class="col-3">
                             <select class="form-control type" name="type" required>
@@ -1497,6 +1319,18 @@
                 <div class="col-4">
                     <div class="row d-flex">
                         <div class="col-4">
+                            <input type="text" class="form-control p_value" name="p_value" />
+                        </div>
+                        <div class="col-4">
+                            <input type="text" class="form-control v_value" name="v_value" />
+                        </div>
+                        <div class="col-4">
+                            <select class="form-control vendor_id" name="vendor_id">
+                                <option disabled selected>Select Vendor </option>
+
+                            </select>
+                        </div>
+                        {{-- <div class="col-4">
                             <select class="form-control payment_type" name="payment_type" required>
                                 <option disabled selected> Select payment type</option>
                                 <option value="fixed">Fixed</option>
@@ -1509,10 +1343,10 @@
                         </div>
                         <div class="col-4">
                             <input type="text" class="form-control p_tax" name="p_tax" />
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
-                <div class="col-4">
+                {{-- <div class="col-4">
                     <div class="row d-flex">
                         <div class="col-4">
                             <input type="text" class="form-control p_discount" name="p_discount" />
@@ -1527,9 +1361,9 @@
                             </select>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 {{-- lasst form start --}}
-                <div class="col-4" style="background: #E5E7E9;">
+                {{-- <div class="col-4" style="background: #E5E7E9;">
                     <div class="row d-flex">
                         <div class="col-4">
                             <select class="form-control v_payment_type" name="v_payment_type" required>
@@ -1546,8 +1380,8 @@
                             <input type="text" class="form-control v_tax" name="v_tax" />
                         </div>
                     </div>
-                </div>
-                <div class="col-4" style="background: #E5E7E9; margin-left:-5px">
+                </div> --}}
+                {{-- <div class="col-4" style="background: #E5E7E9; margin-left:-5px">
                     <div class="row d-flex">
                         <div class="col-5">
                             <input type="text" class="form-control v_discount" name="v_discount" />
@@ -1557,7 +1391,7 @@
                         </div>
 
                     </div>
-                </div>
+                </div> --}}
             </div>
 
             <div class="col-4">

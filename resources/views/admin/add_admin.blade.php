@@ -90,6 +90,13 @@
                             <p>Request Manual</p>
                         </a>
                     </li>
+
+                    <li>
+                        <a href="{{ url('admin/ledger') }}">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <p>Ledger</p>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -140,7 +147,7 @@
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                                                                                                                       document.getElementById('logout-form').submit();">
+                                                                                                                                                                                                   document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
 
@@ -212,6 +219,65 @@
                                                     placeholder="Role Type" class="form-control" required>
                                             </div>
                                         </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="form-group pl-4">
+                                                <label class="control-label" for="phone">Permissions</label>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div class="row">
+                                                            <div class="col-1"><input type="checkbox"
+                                                                    class="form-check-input" name="permission[]"
+                                                                    value="Processing"></div>
+                                                            <div class="col-9"><label>Processing</label></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="row">
+                                                            <div class="col-1"><input type="checkbox"
+                                                                    class="form-check-input" name="permission[]"
+                                                                    value="Approved"></div>
+                                                            <div class="col-9"><label>Approved</label></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div class="row">
+                                                            <div class="col-1"><input type="checkbox"
+                                                                    class="form-check-input" name="permission[]"
+                                                                    value="Pending"></div>
+                                                            <div class="col-9"><label>Pending</label></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="row">
+                                                            <div class="col-1"><input type="checkbox"
+                                                                    class="form-check-input" name="permission[]"
+                                                                    value="Rejected"></div>
+                                                            <div class="col-9"><label>Rejected</label></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div class="row">
+                                                            <div class="col-1"><input type="checkbox"
+                                                                    class="form-check-input" name="permission[]"
+                                                                    value="Posted"></div>
+                                                            <div class="col-9"><label>Posted</label></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="row">
+                                                            <div class="col-1"><input type="checkbox"
+                                                                    class="form-check-input" name="permission[]"
+                                                                    value="Completed"></div>
+                                                            <div class="col-9"><label>Completed</label></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         {{-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                                             <div class="form-group">
                                                 <label class="control-label" for="subject">Role</label>
@@ -243,7 +309,8 @@
             <footer class="footer">
                 <div class=" container-fluid ">
                     <div class="copyright" id="copyright">
-                       @<script>
+                        @
+                        <script>
                             document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))
                         </script>, Developed by <a href="https://therevolutiontechnologies.com"
                             target="_blank">The Revolution Technologies</a>

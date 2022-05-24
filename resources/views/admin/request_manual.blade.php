@@ -111,6 +111,13 @@
                             <p>Request Manual</p>
                         </a>
                     </li>
+
+                    <li>
+                        <a href="{{ url('admin/ledger') }}">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <p>Ledger</p>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -161,7 +168,7 @@
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       document.getElementById('logout-form').submit();">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
 
@@ -177,112 +184,6 @@
                 </div>
             </nav>
             <!-- End Navbar -->
-            {{-- new form submit request start here --}}
-            <div class="content">
-
-                <div class="row">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="row">
-                                <div class="col-6 mt-2">
-                                    <div class="form-group">
-                                        <label>User</label>
-                                        <select name="customer" id="customer" class="form-control">
-                                            @if (isset($customers))
-                                                @foreach ($customers as $cst)
-                                                    <option value="{{ $cst->id }}">{{ $cst->contact }}
-                                                    </option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-6 mt-2">
-                                    <div class="form-group">
-                                        <label for="">Request Type</label>
-                                        <select name="tabtype" id="tabtype" class="form-control">
-                                            <option value="1">Ticketing</option>
-                                            <option value="2">Refund</option>
-                                            <option value="3">Void</option>
-                                            <option value="4">Date Change</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <!-- contact-form -->
-                            <div class="row">
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                                    <div class="form-group">
-                                        <label class="control-label" for="name">Airline Name</label>
-                                        <select name="airline_name" id="tab_airline_name" class="form-control"
-                                            required>
-                                            <option disabled selected value> -- Select Airline -- </option>
-                                            @if (isset($airline))
-                                                @foreach ($airline as $air)
-                                                    <option value="{{ $air->id }}">
-                                                        {{ $air->airline_name }}</option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-
-                                    </div>
-                                </div>
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                                    <div class="form-group">
-                                        <label class="control-label" for="email">PNR</label>
-                                        <input name="pnr" id="tab_pnr" type="text" placeholder="PNR"
-                                            class="form-control" required>
-                                    </div>
-                                </div>
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                                    <div class="form-group">
-                                        <label class="control-label" for="phone"> Booking Source</label>
-                                        <select name="booking_source" id="tab_booking_source" class="form-control"
-                                            required>
-                                            <option disabled selected value> -- Select Booking Source --
-                                            </option>
-                                            @if (isset($booking))
-                                                @foreach ($booking as $book)
-                                                    <option value="{{ $book->id }}">
-                                                        {{ $book->booking_source }}</option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                                    <div class="form-group">
-                                        <label class="control-label" for="subject">Sector </label>
-                                        <input id="tab_sector" name="sector" type="text" placeholder="Sector"
-                                            class="form-control" required>
-                                    </div>
-                                </div>
-
-
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                                    <div class="form-group">
-                                        <label class="control-label" for="textarea">Travel Date</label>
-                                        <input type="date" class="form-control" id="tab_date" name="date" required />
-                                    </div>
-                                </div>
-                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                                    <div class="form-group">
-                                        <label class="control-label" for="textarea">Passenger Name</label>
-                                        <input type="text" class="form-control" name="passenger_name"
-                                            id="tab_passenger_name" placeholder="Any Passenger name from booking"
-                                            required>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- contact-form -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- new form submit request end here --}}
 
             <div class="content">
                 <div class="row">
@@ -307,7 +208,40 @@
                                     <div class="row">
                                         <div class="col-12 col-md-6">
                                             <div class="form-group">
-                                                <label class="font-weight-bold label">Date</label>
+                                                <label class="font-weight-bold label">Agency
+                                                    Name</label>
+                                                <select name="agency_name" id="agency_name" class="form-control"
+                                                    required>
+                                                    <option selected disabled>---Select Agency----</option>
+                                                    @if (isset($customers))
+                                                        @foreach ($customers as $cust)
+                                                            @if ($cust)
+                                                                <option value="{{ $cust->agency_name }}">
+                                                                    {{ $cust->agency_name }}</option>
+                                                            @endif
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+                                            </div>
+                                        </div>
+                                        {{-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="form-group">
+                                                <label class="control-label" for="subject">Sector </label>
+                                                <input id="tab_sector" name="sector" type="text" placeholder="Sector"
+                                                    class="form-control" required>
+                                            </div>
+                                        </div> --}}
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 d-none">
+                                            <div class="form-group">
+                                                <label class="control-label" for="textarea">Passenger Name</label>
+                                                <input type="hidden" class="form-control" name="passenger_name"
+                                                    id="tab_passenger_name"
+                                                    placeholder="Any Passenger name from booking" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="font-weight-bold label">Travel Date</label>
                                                 <input type="date" name="date" id="date" class="form-control"
                                                     required />
                                             </div>
@@ -319,41 +253,23 @@
                                                     required>
                                                     <option selected disabled>---Select Transaction
                                                         ----</option>
-                                                    <option value="TICKET">TICKET</option>
-                                                    <option value="DATE-CHANGE">DATE CHANGE</option>
-                                                    <option value="APPROVAL">APPROVAL</option>
-                                                    <option value="BAGGAGE">BAGGAGE</option>
-                                                    <option value="CREDIT">CREDIT</option>
-                                                    <option value="DEBIT">DEBIT</option>
-                                                    <option value="OK-TO-BOARD">OK TO BOARD</option>
-                                                    <option value="INSURANCE">INSURANCE</option>
-                                                    <option value="PL-UK-FORM">PL UK FORM</option>
-                                                    <option value="HOTEL_RES">HOTEL RES</option>
-                                                    <option value="VISA">VISA</option>
-                                                    <option value="COVID-19">COVID-19</option>
-                                                    <option value="REFUND">REFUND</option>
-                                                    <option value="VOID">VOID</option>
-                                                    <option value="ADJUSTMENT">ADJUSTMENT</option>
-                                                    <option value="OTHERS">OTHERS</option>
-                                                    <option value="UMRAH">UMRAH</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12 col-md-6">
-                                            <div class="form-group">
-                                                <label class="font-weight-bold label">Agency
-                                                    Name</label>
-                                                <select name="agency_name" id="agency_name" class="form-control"
-                                                    required>
-                                                    <option selected disabled>---Select booking
-                                                        source----</option>
-                                                    @if (isset($customers))
-                                                        @foreach ($customers as $cust)
-                                                            <option value="{{ $cust->agency_name }}">
-                                                                {{ $cust->agency_name }}</option>
-                                                        @endforeach
-                                                    @endif
+                                                    <option value="1">TICKET</option>
+                                                    <option value="4">DATE CHANGE</option>
+                                                    <option value="6">APPROVAL</option>
+                                                    <option value="7">BAGGAGE</option>
+                                                    <option value="8">CREDIT</option>
+                                                    <option value="9">DEBIT</option>
+                                                    <option value="10">OK TO BOARD</option>
+                                                    <option value="11">INSURANCE</option>
+                                                    <option value="12">PL UK FORM</option>
+                                                    <option value="13">HOTEL RES</option>
+                                                    <option value="14">VISA</option>
+                                                    <option value="15">COVID-19</option>
+                                                    <option value="2">REFUND</option>
+                                                    <option value="3">VOID</option>
+                                                    <option value="16">ADJUSTMENT</option>
+                                                    <option value="18">OTHERS</option>
+                                                    <option value="17">UMRAH</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -406,12 +322,12 @@
                                         </div>
                                         <div class="col-12 col-md-6">
                                             <div class="form-group">
-                                                <label class="font-weight-bold label">pnr</label>
+                                                <label class="font-weight-bold label">Pnr</label>
                                                 <input type="text" name="pnr" id="pnr" class="form-control"
                                                     required />
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-6">
+                                        {{-- <div class="col-12 col-md-6">
                                             <div class="form-group">
                                                 <label class="font-weight-bold label">From</label>
                                                 <input type="text" name="from" id="from" class="form-control"
@@ -423,7 +339,7 @@
                                                 <label class="font-weight-bold label">To</label>
                                                 <input type="text" name="to" id="to" class="form-control" required />
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="col-12 col-md-6">
                                             <div class="form-group">
                                                 <label class="font-weight-bold label">Dep Date</label>
@@ -513,6 +429,12 @@
                             <div class="col-4">
                                 <div class="row d-flex">
                                     <div class="col-5">
+                                        <p>Amount</p>
+                                    </div>
+                                    <div class="col-5">
+                                        <p>Paid Amount</p>
+                                    </div>
+                                    {{-- <div class="col-5">
                                         <p>P.Type</p>
                                     </div>
                                     <div class="col-3">
@@ -520,18 +442,18 @@
                                     </div>
                                     <div class="col-3">
                                         <p>Tax</p>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
-                            <div class="col-4 ">
+                            {{-- <div class="col-4 ">
                                 <div class="row d-flex">
                                     <div class="col-4">
-                                        <p>Discount</p>
+                                        <p>%age</p>
                                     </div>
                                     <div class="col-4">
                                         <p>Value</p>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-4" style="background: #E5E7E9;">
                                         <p>Vendor</p>
                                     </div>
                                 </div>
@@ -554,17 +476,20 @@
                             <div class="col-4 " style="background: #E5E7E9; margin-left:-5px">
                                 <div class="row d-flex">
                                     <div class="col-4">
-                                        <p>Discount</p>
+                                        <p>%age</p>
                                     </div>
-                                    <div class="col-5">
+                                    <div class="col-4">
                                         <p>Value</p>
                                     </div>
+                                    <div class="col-4">
+                                        <p>Vendor</p>
+                                    </div>
                                 </div>
-                            </div>
+                            </div> --}}
 
 
                             {{-- <div class="col-4 ">   // third form
-                                    <div class="row d-flex " style="background: #E5E7E9;">
+                                    <div class="row d-flex ">
                                         <div class="col-3">
                                             <p>P.Type</p>
                                         </div>
@@ -712,11 +637,18 @@
             var container = $('#passenger-form-container').empty();
 
             const count = $(this).val();
+            $('#nopas').html($('#total_passenger').val())
             console.log(count);
             for (var i = 0; i < count; i++) {
                 addPassengerForm();
             }
-
+            //add sr number in passenger form
+            var srNum = $('.srNum')
+            srNum.each(function(i, ele) {
+                console.log('element', ele)
+                $(ele).html(i + 1);
+                console.log('index', i)
+            })
             $.ajax({
                 url: '/admin/getVendor',
                 method: 'get',
@@ -730,197 +662,6 @@
 
                 }
             });
-        });
-        $(document).on('change', '.payment_type', function() {
-            var value = $(this).val();
-            if (value === 'fixed') {
-                var main_content = $(this).closest('.main_content');
-                {{-- console.log(main_content) --}}
-                $(main_content).find('.p_basic').prop('disabled', true);
-                $(main_content).find('.p_tax').prop('disabled', true);
-                $(main_content).find('.p_discount').prop('disabled', true);
-                $(main_content).find('.p_value').prop('disabled', false);
-            } else if (value === 'commision' || value === 'discount') {
-                var main_content = $(this).closest('.main_content');
-                console.log(main_content)
-                $(main_content).find('.p_basic').prop('disabled', false);
-                $(main_content).find('.p_tax').prop('disabled', false);
-                $(main_content).find('.p_discount').prop('disabled', false);
-                $(main_content).find('.p_value').prop('disabled', true);
-            } else {
-                var main_content = $(this).closest('.main_content');
-                console.log(main_content)
-                $(main_content).find('.p_basic').prop('disabled', false);
-                $(main_content).find('.p_tax').prop('disabled', false);
-                $(main_content).find('.p_discount').prop('disabled', false);
-            }
-
-        });
-        $(document).on('change', '.v_payment_type', function() {
-            var value = $(this).val();
-            if (value === 'fixed') {
-                var main_content = $(this).closest('.main_content');
-                {{-- console.log(main_content) --}}
-                $(main_content).find('.v_basic').prop('disabled', true);
-                $(main_content).find('.v_tax').prop('disabled', true);
-                $(main_content).find('.v_discount').prop('disabled', true);
-                $(main_content).find('.v_value').prop('disabled', false);
-            } else if (value === 'commision' || value === 'discount') {
-                var main_content = $(this).closest('.main_content');
-                console.log(main_content)
-                $(main_content).find('.v_basic').prop('disabled', false);
-                $(main_content).find('.v_tax').prop('disabled', false);
-                $(main_content).find('.v_discount').prop('disabled', false);
-                $(main_content).find('.v_value').prop('disabled', true);
-            } else {
-                var main_content = $(this).closest('.main_content');
-                console.log(main_content)
-                $(main_content).find('.v_basic').prop('disabled', false);
-                $(main_content).find('.v_tax').prop('disabled', false);
-                $(main_content).find('.v_discount').prop('disabled', false);
-            }
-
-        }); // selected disabled v_payment_type
-        $(document).on('change', '.p_tax', function() {
-
-            let tax, basic, price = 0;
-            let dis_percentage = 0;
-            var type = $(this).closest('.main_content').find('.payment_type').val();
-            if (type === 'commision' || type === 'discount') {
-                tax = parseInt($(this).val());
-                basic = parseInt($(this).closest('.main_content').find('.p_basic').val());
-                price = basic + tax;
-                dis_percentage = parseInt($(this).closest('.main_content').find('.p_discount').val());
-                const finalPrice = dis_percentage * price;
-                const discount = finalPrice / 100;
-                const total_price = price - discount;
-                console.log('tex', dis_percentage, price, finalPrice, discount, basic, tax)
-                if (total_price > 0) {
-                    $(this).parents('.main_content').find('.p_value').val(total_price);
-                    console.log($(this))
-                } else {
-                    $(this).parents('.main_content').find('.p_value').val(0);
-                    console.log($(this))
-                }
-            }
-
-        });
-        $(document).on('change', '.p_basic', function() {
-            let tax, basic, price = 0;
-            let dis_percentage = 0;
-            var type = $(this).closest('.main_content').find('.payment_type').val();
-            if (type === 'commision' || type === 'discount') {
-                tax = parseInt($(this).closest('.main_content').find('.p_tax').val());
-                basic = parseInt($(this).val());
-                price = basic + tax;
-                dis_percentage = parseInt($(this).closest('.main_content').find('.p_discount').val());
-                const finalPrice = dis_percentage * price;
-                const discount = finalPrice / 100;
-                const total_price = price - discount;
-                console.log('tex', dis_percentage, price, finalPrice, discount, basic, tax)
-                if (total_price > 0) {
-                    $(this).parents('.main_content').find('.p_value').val(total_price);
-                    console.log($(this))
-                } else {
-                    $(this).parents('.main_content').find('.p_value').val(0);
-                    console.log($(this))
-                }
-            }
-
-        });
-        $(document).on('change', '.p_discount', function() {
-            let tax, basic, price = 0;
-            let dis_percentage = 0;
-            var type = $(this).closest('.main_content').find('.payment_type').val();
-            if (type === 'commision' || type === 'discount') {
-                tax = parseInt($(this).closest('.main_content').find('.p_tax').val());
-                basic = parseInt($(this).closest('.main_content').find('.p_basic').val());
-                price = basic + tax;
-                let dis_percentage = parseInt($(this).val());
-                const finalPrice = dis_percentage * price;
-                const discount = finalPrice / 100;
-                const total_price = price - discount;
-                console.log('tex', dis_percentage, price, finalPrice, discount, basic, tax)
-                if (total_price > 0) {
-                    $(this).parents('.main_content').find('.p_value').val(total_price);
-                    console.log($(this))
-                } else {
-                    $(this).parents('.main_content').find('.p_value').val(0);
-                    console.log($(this))
-                }
-            }
-
-        });
-
-        $(document).on('change', '.v_tax', function() {
-
-            let tax, basic, price = 0;
-            let dis_percentage = 0;
-            var type = $(this).closest('.main_content').find('.v_payment_type').val();
-            if (type === 'commision' || type === 'discount') {
-                tax = parseInt($(this).val());
-                basic = parseInt($(this).closest('.main_content').find('.v_basic').val());
-                price = basic + tax;
-                dis_percentage = parseInt($(this).closest('.main_content').find('.v_discount').val());
-                const finalPrice = dis_percentage * price;
-                const discount = finalPrice / 100;
-                const total_price = price - discount;
-                console.log('tex', dis_percentage, price, finalPrice, discount, basic, tax)
-                if (total_price > 0) {
-                    $(this).parents('.main_content').find('.v_value').val(total_price);
-                    console.log($(this))
-                } else {
-                    $(this).parents('.main_content').find('.v_value').val(0);
-                    console.log($(this))
-                }
-            }
-
-        });
-        $(document).on('change', '.v_basic', function() {
-            let tax, basic, price = 0;
-            let dis_percentage = 0;
-            var type = $(this).closest('.main_content').find('.v_payment_type').val();
-            if (type === 'commision' || type === 'discount') {
-                tax = parseInt($(this).closest('.main_content').find('.v_tax').val());
-                basic = parseInt($(this).val());
-                price = basic + tax;
-                dis_percentage = parseInt($(this).closest('.main_content').find('.v_discount').val());
-                const finalPrice = dis_percentage * price;
-                const discount = finalPrice / 100;
-                const total_price = price - discount;
-                console.log('tex', dis_percentage, price, finalPrice, discount, basic, tax)
-                if (total_price > 0) {
-                    $(this).parents('.main_content').find('.v_value').val(total_price);
-                    console.log($(this))
-                } else {
-                    $(this).parents('.main_content').find('.v_value').val(0);
-                    console.log($(this))
-                }
-            }
-
-        });
-        $(document).on('change', '.v_discount', function() {
-            let tax, basic, price = 0;
-            let dis_percentage = 0;
-            var type = $(this).closest('.main_content').find('.v_payment_type').val();
-            if (type === 'commision' || type === 'discount') {
-                tax = parseInt($(this).closest('.main_content').find('.v_tax').val());
-                basic = parseInt($(this).closest('.main_content').find('.v_basic').val());
-                price = basic + tax;
-                let dis_percentage = parseInt($(this).val());
-                const finalPrice = dis_percentage * price;
-                const discount = finalPrice / 100;
-                const total_price = price - discount;
-                console.log('tex', dis_percentage, price, finalPrice, discount, basic, tax)
-                if (total_price > 0) {
-                    $(this).parents('.main_content').find('.v_value').val(total_price);
-                    console.log($(this))
-                } else {
-                    $(this).parents('.main_content').find('.v_value').val(0);
-                    console.log($(this))
-                }
-            }
-
         });
 
         $(document).on('click', '.updatepassenger', function() {
@@ -939,11 +680,9 @@
             {{-- e.preventDefault(); --}}
             var passenger = getPassengerData();
             var ledger = getLedgerData();
-            var tabinfo = getTabinfoData();
             var data = {
                 ledger: ledger,
                 passenger: passenger,
-                tabinfo
             };
             console.log(data)
             $.ajax({
@@ -952,8 +691,7 @@
                     '_token': '{{ csrf_token() }}',
                     'data': {
                         ledger,
-                        passenger,
-                        tabinfo
+                        passenger
                     }
                 },
                 method: 'POST',
@@ -961,6 +699,7 @@
                     console.log(e);
                     if (e.status == 200) {
                         alert('manual request proceded successfully')
+                        location.reload();
                     } else {
                         alert('all feild required')
                     }
@@ -980,10 +719,12 @@
             obj.airline_id = $('#airline_id').val();
             obj.ticket_type = $('#ticket_type').val();
             obj.pnr = $('#pnr').val();
-            obj.to = $('#to').val();
-            obj.from = $('#from').val();
+            {{-- obj.to = $('#to').val();
+            obj.from = $('#from').val(); --}}
             obj.dep_date = $('#dep_date').val();
             obj.arr_date = $('#arr_date').val();
+            obj.passenger_name = $('#tab_passenger_name').val();
+            {{-- obj.sector = $('#tab_sector').val(); --}}
             arr.push(obj)
             return arr;
         }
@@ -1018,22 +759,6 @@
 
             return arr;
         }
-
-        function getTabinfoData() {
-            var obj = {}
-            var arr = []
-            obj.user_id = $('#customer').val();
-            obj.tabtype_id = $('#tabtype').val();
-            obj.airline_id = $('#tab_airline_name').val()
-            obj.pnr = $('#tab_pnr').val();
-            obj.booking_id = $('#tab_booking_source').val()
-            obj.sector = $('#tab_sector').val();
-            obj.date = $('#tab_date').val()
-            obj.passenger_name = $('#tab_passenger_name').val()
-            arr.push(obj)
-
-            return arr
-        }
     </script>
 
 
@@ -1043,7 +768,7 @@
                 <div class="col-8">
                     <div class="row d-flex">
                         <div class="col-1">
-                            <p>1</p>
+                            <p class="srNum"></p>
                         </div>
                         <div class="col-3">
                             <select class="form-control type" name="type" required>
@@ -1069,6 +794,18 @@
                 <div class="col-4">
                     <div class="row d-flex">
                         <div class="col-4">
+                            <input type="text" class="form-control p_value" name="p_value" />
+                        </div>
+                        <div class="col-4">
+                            <input type="text" class="form-control v_value" name="v_value" />
+                        </div>
+                        <div class="col-4" style="background: #E5E7E9;">
+                            <select class="form-control vendor_id" name="vendor_id">
+                                <option disabled selected>Select Vendor </option>
+
+                            </select>
+                        </div>
+                        {{-- <div class="col-4">
                             <select class="form-control payment_type" name="payment_type" required>
                                 <option disabled selected> Select payment type</option>
                                 <option value="fixed">Fixed</option>
@@ -1081,10 +818,10 @@
                         </div>
                         <div class="col-4">
                             <input type="text" class="form-control p_tax" name="p_tax" />
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
-                <div class="col-4">
+                {{-- <div class="col-4">
                     <div class="row d-flex">
                         <div class="col-4">
                             <input type="text" class="form-control p_discount" name="p_discount" />
@@ -1092,16 +829,16 @@
                         <div class="col-4">
                             <input type="text" class="form-control p_value" name="p_value" />
                         </div>
-                        <div class="col-4">
+                        <div class="col-4" style="background: #E5E7E9;">
                             <select class="form-control vendor_id" name="vendor_id">
                                 <option disabled selected>Select Vendor </option>
 
                             </select>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 {{-- lasst form start --}}
-                <div class="col-4" style="background: #E5E7E9;">
+                {{-- <div class="col-4" style="background: #E5E7E9;">
                     <div class="row d-flex">
                         <div class="col-4">
                             <select class="form-control v_payment_type" name="v_payment_type" required>
@@ -1118,8 +855,8 @@
                             <input type="text" class="form-control v_tax" name="v_tax" />
                         </div>
                     </div>
-                </div>
-                <div class="col-4" style="background: #E5E7E9; margin-left:-5px">
+                </div> --}}
+                {{-- <div class="col-4" style="background: #E5E7E9; margin-left:-5px">
                     <div class="row d-flex">
                         <div class="col-5">
                             <input type="text" class="form-control v_discount" name="v_discount" />
@@ -1129,7 +866,7 @@
                         </div>
 
                     </div>
-                </div>
+                </div> --}}
             </div>
 
             <div class="col-4">

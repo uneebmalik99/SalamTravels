@@ -11,6 +11,7 @@
     </title>
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
         name='viewport' />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <!--     Fonts and icons     -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,6 +20,7 @@
         integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- CSS Files -->
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
     <link href="{{ asset('css/app.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
     <!-- CSS Just for demo purpose, don't include it in your project -->
@@ -90,6 +92,13 @@
                             <p>Request Manual</p>
                         </a>
                     </li>
+
+                    <li>
+                        <a href="{{ url('admin/ledger') }}">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <p>Ledger</p>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -138,8 +147,9 @@
                                     </a>
 
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                                   document.getElementById('logout-form').submit();">
+                                        <a class="dropdown-item" href="{{ route('logout') }}"
+                                            onclick="event.preventDefault();
+                                                                                                                                                                                                                                                                                                                                                                                                                                       document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
 
@@ -189,6 +199,13 @@
                                         </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                                             <div class="form-group">
+                                                <label class="control-label" for="name">Email</label>
+                                                <input id="mobile" name="email" type="email"
+                                                    value="{{ $data->email }}" class="form-control" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="form-group">
                                                 <label class="control-label" for="name">Phone</label>
                                                 <input id="phone" name="phone" type="text" value="{{ $data->phone }}"
                                                     class="form-control" required>
@@ -214,7 +231,36 @@
                                             <div class="form-group">
                                                 <label class="control-label" for="phone">Credit limit</label>
                                                 <input name="credit_limit" id="ledger_link" type="text"
-                                                    value="{{ $data->credit_limit }}" class="form-control" required>
+                                                    value="{{ $data->credit_limit }}" class="form-control"
+                                                    required>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="form-group">
+
+                                                <label class="control-label" for="subject">Visiting Card</label>
+                                                <input type="hidden" id="visiting_card" name="visiting_card"
+                                                    value="{{ $data->visiting_card }}" />
+                                                <input type="hidden" id="filesize" name="filesize"
+                                                    value="{{ $data->card_size }}" />
+                                                <div class="jumbotron dropzone" id="singledrop">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="form-group">
+
+                                                <label class="control-label" for="subject">Agency Picture</label>
+                                                <input type="hidden" id="agency_picture" name="agency_picture"
+                                                    value="{{ $data->agency_picture }}" />
+                                                <input type="hidden" id="filesize" name="filesize"
+                                                    value="{{ $data->card_size }}" />
+                                                <div class="jumbotron dropzone" id="agency_pic">
+
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-center">
@@ -247,6 +293,8 @@
                                 <script src="{{ asset('js/app.js') }}"></script>
                                 <script src="{{ asset('js/demo.js') }}"></script>
                                 <script src="{{ asset('js/plugins/perfect-scrollbar.jquery.min.js') }}"></script>
+                                <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+
                                 <!--  Google Maps Plugin    -->
                                 <!-- Chart JS -->
                                 <script src="{{ asset('js/plugins/chartjs.min.js') }}"></script>
@@ -262,6 +310,82 @@
                                         $('#showImg').empty();
                                         $('#showImg').append('<img src="' + data + '" class="img-fluid w-100 h-100" />');
                                     });
+
+                                    setSelectBox();
+
+                                    function setSelectBox() {
+                                        initDropZone('#singledrop', '/visiting_card', '#visiting_card')
+                                        initDropZone('#agency_pic', '/agency_picture', '#agency_picture')
+                                        {{-- $.ajax({
+                                            url: '/getAuction',
+                                            dataType: 'json',
+                                            success: function(data) {
+                                                $('#auction_id').val(data.id);
+                                                initDropZone('#singledrop', '/visiting_card', '#visiting_card')
+                                                initDropZone('#agency_pic',  '/agency_picture', '#agency_picture')
+                                            }
+                                        }); --}}
+                                    }
+
+                                    function initDropZone(elementId, url, imageType) {
+                                        // var id = $('#auction_id').val();
+                                        // url += url+id;
+                                        $(elementId).dropzone({
+                                            url: `${url}/upload_image`,
+                                            method: "post",
+                                            maxFilesize: 1,
+                                            renameFile: function(file) {
+                                                var dt = new Date();
+                                                var time = dt.getTime();
+                                                return time + file.name;
+                                            },
+                                            headers: {
+                                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                            },
+                                            acceptedFiles: ".jpeg,.jpg,.png,.gif",
+                                            addRemoveLinks: true,
+                                            timeout: 5000,
+                                            init: function() {
+                                                var thisDropzone = this;
+                                                var mockFile = {
+                                                    name: $(imageType).val(),
+                                                    size: $('#filesize').val()
+                                                }
+                                                console.log(imageType)
+                                                if (mockFile && mockFile.name) {
+                                                    thisDropzone.options.addedfile.call(thisDropzone, mockFile);
+                                                    thisDropzone.options.thumbnail.call(thisDropzone, mockFile, '/images/' + $(imageType)
+                                                        .val())
+                                                }
+
+
+                                                this.on('removedfile', function(file) {
+                                                    console.log(file);
+                                                    if (file) {
+                                                        $.ajax({
+                                                            url: `${url}/delete_image/${file.name}`,
+                                                            method: 'GET',
+                                                            success: function(response) {
+                                                                console.log(response)
+                                                                $(imageType).val('')
+                                                            },
+                                                            error: function(error) {
+                                                                console.log(error)
+                                                            }
+                                                        })
+                                                    }
+                                                })
+                                            },
+                                            success: function(file, response) {
+                                                $(imageType).val(response.image);
+                                                $('#filesize').val(response.filesize);
+                                                console.log(response.image);
+                                            },
+                                            error: function(file, response) {
+                                                return false;
+                                            }
+                                        });
+                                    }
                                 </script>
 </body>
 

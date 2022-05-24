@@ -90,6 +90,13 @@
                             <p>Request Manual</p>
                         </a>
                     </li>
+
+                    <li>
+                        <a href="{{ url('admin/ledger') }}">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <p>Ledger</p>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -140,7 +147,7 @@
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                                                                                                                       document.getElementById('logout-form').submit();">
+                                                                                                                                                                                                                                           document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
 
@@ -155,8 +162,8 @@
                     </div>
                 </div>
             </nav>
-            <!-- End Navbar -->   
-                                <!--  settings test-->   
+            <!-- End Navbar -->
+            <!--  settings test-->
             <div class="content">
                 <div class="row">
                     <div class="col-md-12">
@@ -176,54 +183,113 @@
                         @if (isset($errors) && count($errors) > 0)
                             {{ $errors }}
                         @endif
-                        <div class="card"> 
+                        <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title text-center">Update Sub Admin</h4>
                             </div>
                             <div class="card-body">
-                                <form method="POST" action="{{url('admin/update-post')}}">
-                                    @csrf 
-                                    <input type="hidden" name="newid" id=""  value="{{$user->id}}">
+                                <form method="POST" action="{{ url('admin/update-post') }}">
+                                    @csrf
+                                    <input type="hidden" name="newid" id="" value="{{ $user->id }}">
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                                             <div class="form-group">
                                                 <label class="control-label" for="name">Name</label>
-                                                <input id="" name="name" type="text" value="{{$user->name}}"
+                                                <input id="" name="name" type="text" value="{{ $user->name }}"
                                                     placeholder="" class="form-control" required>
                                             </div>
                                         </div>
-                                       
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="form-group">
+                                                <label class="control-label" for="phone">Email</label>
+                                                <input name="email" id="email" type="email"
+                                                    value="{{ $user->email }}" placeholder="Email"
+                                                    class="form-control" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="form-group">
+                                                <label class="control-label" for="phone">Password</label>
+                                                <input name="password" id="password" type="password" autocomplete="off"
+                                                    placeholder="Password" class="form-control">
+                                            </div>
+                                        </div>
                                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                                             <div class="form-group">
                                                 <label class="control-label" for="phone">Role</label>
-                                                <input name="role" id="role" type="text" value=" <?php if($user->role == '1'){
-                                                    echo "Admin";
-                                                }
-                                                else {
-                                                    echo 'Sub Admin';
-                                                }?>"
-                                                    placeholder="Role" class="form-control" required>
+                                                <input name="role_type" id="role_type" type="text"
+                                                    placeholder="Role Type" class="form-control"
+                                                    value="{{ $user->role_type }}" required>
                                             </div>
                                         </div>
-                                        {{-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                                            <div class="form-group">
-                                                <label class="control-label" for="subject">Role</label>
-                                                <select name="role" class="form-control" required>
-                                                    <option disabled selected>-------Select Role--------</option>
-                                                    @if (isset($data))
-                                                        @foreach ($data as $row)
-                                                            <option value="{{ $row->name }}">{{ $row->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    @else
-                                                        <option disabled>Reload Page</option>
-                                                    @endif
-                                                </select>
+                                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                                            <div class="form-group pl-4">
+                                                <label class="control-label" for="phone">Permissions</label>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div class="row">
+                                                            <div class="col-1"><input type="checkbox"
+                                                                    class="form-check-input" name="permission[]"
+                                                                    value="Processing"
+                                                                    @if ($user->hasPermissionTo('Processing')) checked @endif>
+                                                            </div>
+                                                            <div class="col-9"><label>Processing</label></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="row">
+                                                            <div class="col-1"><input type="checkbox"
+                                                                    class="form-check-input" name="permission[]"
+                                                                    @if ($user->hasPermissionTo('Approved')) checked @endif
+                                                                    value="Approved"></div>
+                                                            <div class="col-9"><label>Approved</label></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div class="row">
+                                                            <div class="col-1"><input type="checkbox"
+                                                                    class="form-check-input" name="permission[]"
+                                                                    @if ($user->hasPermissionTo('Pending')) checked @endif
+                                                                    value="Pending"></div>
+                                                            <div class="col-9"><label>Pending</label></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="row">
+                                                            <div class="col-1"><input type="checkbox"
+                                                                    class="form-check-input" name="permission[]"
+                                                                    @if ($user->hasPermissionTo('Rejected')) checked @endif
+                                                                    value="Rejected"></div>
+                                                            <div class="col-9"><label>Rejected</label></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div class="row">
+                                                            <div class="col-1"><input type="checkbox"
+                                                                    class="form-check-input" name="permission[]"
+                                                                    @if ($user->hasPermissionTo('Posted')) checked @endif
+                                                                    value="Posted"></div>
+                                                            <div class="col-9"><label>Posted</label></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="row">
+                                                            <div class="col-1"><input type="checkbox"
+                                                                    class="form-check-input" name="permission[]"
+                                                                    @if ($user->hasPermissionTo('Completed')) checked @endif
+                                                                    value="Completed"></div>
+                                                            <div class="col-9"><label>Completed</label></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div> --}}
+                                        </div>
                                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                            <button type="submit" 
-                                                class="btn btn-primary">Update</button>
+                                            <button type="submit" class="btn btn-primary">Update</button>
                                         </div>
                                     </div>
                                 </form>
@@ -236,7 +302,8 @@
             <footer class="footer">
                 <div class=" container-fluid ">
                     <div class="copyright" id="copyright">
-                        @<script>
+                        @
+                        <script>
                             document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))
                         </script>, Developed by <a href="https://therevolutiontechnologies.com"
                             target="_blank">The Revolution Technologies</a>

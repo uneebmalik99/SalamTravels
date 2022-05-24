@@ -154,7 +154,7 @@
                                         <a href="{{ url('UserProfile') }}" class="dropdown-item">Profile</a>
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                                                                                                                                                                                                                                                                               document.getElementById('logout-form').submit();">
+                                                                                                                                                                                                                                                                                                                                                   document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
 
@@ -455,43 +455,8 @@
                         </div>
                         <div class="col-4">
                             <div class="row d-flex">
-                                <div class="col-5">
-                                    <p>P.Type</p>
-                                </div>
-                                <div class="col-3">
-                                    <p>Basic</p>
-                                </div>
-                                <div class="col-3">
-                                    <p>Tax</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="row d-flex">
-                                <div class="col-3">
-                                    <p>Discount</p>
-                                </div>
-                                <div class="col-3">
-                                    <p>Value</p>
-                                </div>
-                                <div class="col-5">
-                                    <p>Vendor</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="row d-flex">
-                                <div class="col-3">
-                                    <p>Basic</p>
-                                </div>
-                                <div class="col-3">
-                                    <p>Tax</p>
-                                </div>
-                                <div class="col-3">
-                                    <p>Discount</p>
-                                </div>
-                                <div class="col-3">
-                                    <p>Value</p>
+                                <div class="col-4">
+                                    <p>Amount</p>
                                 </div>
                             </div>
                         </div>
@@ -521,43 +486,8 @@
                             </div>
                             <div class="col-4">
                                 <div class="row d-flex">
-                                    <div class="col-5">
-                                        <p>{{ $passenger->payment_type }}</p>
-                                    </div>
-                                    <div class="col-3">
-                                        <p>{{ $passenger->price->basic }}</p>
-                                    </div>
-                                    <div class="col-3">
-                                        <p>{{ $passenger->price->tax }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="row d-flex">
-                                    <div class="col-3">
-                                        <p>{{ $passenger->price->discount }}</p>
-                                    </div>
-                                    <div class="col-3">
+                                    <div class="col-4">
                                         <p>{{ $passenger->price->value }}</p>
-                                    </div>
-                                    <div class="col-5">
-                                        <p>{{ $passenger->source->name }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="row d-flex">
-                                    <div class="col-3">
-                                        <p>{{ $passenger->vendor->basic }}</p>
-                                    </div>
-                                    <div class="col-3">
-                                        <p>{{ $passenger->vendor->tax }}</p>
-                                    </div>
-                                    <div class="col-3">
-                                        <p>{{ $passenger->vendor->discount }}</p>
-                                    </div>
-                                    <div class="col-3">
-                                        <p>{{ $passenger->vendor->value }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -578,8 +508,8 @@
                     <div class="copyright" id="copyright">
                         <script>
                             document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))
-                        </script>, Developed by <a
-                            href="https://therevolutiontechnologies.com" target="_blank">The Revolution Technology</a>
+                        </script>, Developed by <a href="https://therevolutiontechnologies.com"
+                            target="_blank">The Revolution Technology</a>
                     </div>
                 </div>
             </footer>

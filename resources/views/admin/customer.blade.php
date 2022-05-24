@@ -15,6 +15,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.0/datatables.min.css" />
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
         integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -90,6 +92,13 @@
                             <p>Request Manual</p>
                         </a>
                     </li>
+
+                    <li>
+                        <a href="{{ url('admin/ledger') }}">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <p>Ledger</p>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -133,14 +142,14 @@
                             @else
                                 <li class="nav-item dropdown">
                                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>  
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                         {{ Auth::user()->name }}
                                     </a>
 
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                                                                                                                                                                                   document.getElementById('logout-form').submit();">
+                                                                                                                                                                                                                                                                           document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
 
@@ -179,7 +188,7 @@
                                     <a href="{{ url('admin/addNewCustomer') }}"
                                         class="float-right btn btn-primary">Add
                                         new Travel Agent</a>
-                                    <table class="table">
+                                    <table class="table" id="customerTable">
                                         <thead>
                                             <tr>
                                                 <th scope="col">Sr.#</th>
@@ -187,6 +196,7 @@
                                                 <th scope="col">Email</th>
                                                 <th scope="col">Password</th>
                                                 <th scope="col">Phone</th>
+                                                <th scope="col">Balance</th>
                                                 <th scope="col">Visiting Card</th>
                                                 <th scope="col">Status</th>
                                                 <th scope="col" class="text-center">Actions</th>
@@ -202,7 +212,7 @@
                                                         <td>{{ $record->email }}</td>
                                                         <td>{{ $record->password }}</td>
                                                         <td>{{ $record->phone }}</td>
-
+                                                        <td>{{ round($record->balance) }}</td>
                                                         <td><a href="#" class="viewDetails">View <div
                                                                     style="display: none;" class="remarks">
                                                                     {{ asset('public/images/' . $record->visiting_card) }}
@@ -308,15 +318,15 @@
                                                         <td>{{ $record->role_type }}</td>
                                                         <td>
                                                             @if (Auth::user()->hasRole('Super Admin'))
-                                                            <a
-                                                            href="{{ asset('admin/delete_admin/' . $record->id) }}">Delete</a>
+                                                                <a
+                                                                    href="{{ asset('admin/delete_admin/' . $record->id) }}">Delete</a>
                                                             @endif
-                                                            
+
                                                         </td>
                                                         {{-- href="{{ url('admin/update_admin', ['id' => $record->id]) }}" --}}
-                                                        <td><a href="{{ url('admin/edit_admin/'.$record->id) }}"
-                                                            class=" p-1 text-blue"><i
-                                                                class="far fa-edit"></i></a></td>
+                                                        <td><a href="{{ url('admin/edit_admin/' . $record->id) }}"
+                                                                class=" p-1 text-blue"><i
+                                                                    class="far fa-edit"></i></a></td>
                                                     </tr>
                                                 @endforeach
                                             @endif
@@ -341,7 +351,8 @@
             <footer class="footer">
                 <div class=" container-fluid ">
                     <div class="copyright" id="copyright">
-                        @<script>
+                        @
+                        <script>
                             document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))
                         </script>, Developed by <a href="https://therevolutiontechnologies.com"
                             target="_blank">The
@@ -353,6 +364,7 @@
     </div>
     <!--   Core JS Files   -->
     <script src="{{ asset('js/core/jquery.min.js') }}"></script>
+    <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js" defer></script>
     <script src="{{ asset('js/core/popper.min.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/demo.js') }}"></script>
@@ -364,8 +376,10 @@
     <script src="{{ asset('js/plugins/bootstrap-notify.js') }}"></script>
     <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="{{ asset('js/now-ui-dashboard.min.js') }}"></script>
-
     <script>
+        $(document).ready(function() {
+            $("#customerTable").DataTable();
+        });
         $(document).on('click', '.viewDetails', function() {
             $('#exampleModal').modal('show');
             var data = $(this).children('.remarks').text();
