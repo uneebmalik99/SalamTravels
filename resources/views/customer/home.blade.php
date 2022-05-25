@@ -140,7 +140,7 @@
                                         <a href="{{ url('UserProfile') }}" class="dropdown-item">Profile</a>
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                                                                                                                                                                                   document.getElementById('logout-form').submit();">
+                                                                                                                                                                                                                           document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
 
@@ -168,7 +168,7 @@
                                     <table class="table">
                                         <thead>
                                             <tr>
-                                                <th scope="col">Sr.</th>
+                                                {{-- <th scope="col">Sr.</th> --}}
                                                 <th scope="col">Date</th>
                                                 <th scope="col">Type</th>
                                                 <th scope="col">Passenger Name</th>
@@ -188,8 +188,8 @@
                                                     <tr class="clickable-row"
                                                         data-href="{{ url('details/' . $record->id) }}">
                                                         <?php $i++; ?>
-                                                        <td>{{ $i }}</td>
-                                                        <td>{{ $record->date }}</td>
+                                                        {{-- <td>{{ $i }}</td> --}}
+                                                        <td>{{ $record->created_at->format('Y-m-d') }}</td>
                                                         <th>{{ $record->tabtype->tab_name }}</th>
                                                         <td>{{ $record->passenger_name }}</td>
                                                         <td>

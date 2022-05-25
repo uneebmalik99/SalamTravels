@@ -43,7 +43,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $data = Tabinfo::where('user_id', Auth::user()->id)->where('tabtype_id', '!=', 5)->latest('date')->get();
+        $data = Tabinfo::where('user_id', Auth::user()->id)->where('tabtype_id', '!=', 5)->latest()->get();
         foreach ($data as $record) {
             $record->all_airline = Airline::find($record->airline_id);
             $record->all_booking = Booking::find($record->booking_source_id);
@@ -63,15 +63,18 @@ class HomeController extends Controller
         $booking = Booking::all();
         $tabinfo = Tabinfo::find($id);
         $customer = Customer::where('email', $tabinfo->user->email)->first();
-        $passenger = Passenger::where('tabinfo_id', $tabinfo->id)->first();
+        $passengers = Passenger::where('tabinfo_id', $tabinfo->id)->get();
         $ledger = Ledger::where('tabinfo_id', $tabinfo->id)->first();
         $ticket_type = TicketType::all();
         $links = Tabtypelink::where('tabtype_id', $tabinfo->tabtype_id)->get();
-        if ($passenger && isset($passenger)) {
-            $passenger->price = Price::where('passenger_id', $passenger->id)->first();
-            $passenger->vendor = Vendor::where('passenger_id', $passenger->id)->first();
-            $passenger->source = SourceVendor::find($passenger->vendor->vendor_id);
+        if ($passengers && isset($passengers)) {
+            foreach ($passengers as $passenger) {
+
+                $passenger->price = Price::where('passenger_id', $passenger->id)->first();
+                $passenger->vendor = Vendor::where('passenger_id', $passenger->id)->first();
+                $passenger->source = SourceVendor::find($passenger->vendor->vendor_id);
+            }
         }
-        return view('customer.details')->with(['airline' => $airline, 'booking' => $booking, 'links' => $links, 'tabinfo' => $tabinfo, 'customer' => $customer, 'passenger' => $passenger, 'ledger' => $ledger, 'ticket_type' => $ticket_type]);
+        return view('customer.details')->with(['airline' => $airline, 'booking' => $booking, 'links' => $links, 'tabinfo' => $tabinfo, 'customer' => $customer, 'passengers' => $passengers, 'ledger' => $ledger, 'ticket_type' => $ticket_type]);
     }
 }

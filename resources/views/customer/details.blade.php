@@ -154,7 +154,7 @@
                                         <a href="{{ url('UserProfile') }}" class="dropdown-item">Profile</a>
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
-                                                                                                                                                                                                                                                                                                                                                   document.getElementById('logout-form').submit();">
+                                                                                                                                                                                                                                                                                                                                                                       document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
                                         </a>
 
@@ -462,44 +462,48 @@
                         </div>
 
                     </div>
-                    @if ($passenger && isset($passenger))
-                        <div class="row text-center">
-                            <div class="col-8">
-                                <div class="row d-flex">
-                                    <div class="col-1">
-                                        <p>1</p>
+                    @if ($passengers && isset($passengers))
+                        <?php $i = 1; ?>
+                        @foreach ($passengers as $psng)
+                            <div class="row text-center">
+                                <div class="col-8">
+                                    <div class="row d-flex">
+                                        <div class="col-1">
+                                            <p>{{ $i }}</p>
+                                            <?php $i = $i + 1; ?>
+                                        </div>
+                                        <div class="col-2">
+                                            <p>{{ $psng->type }}</p>
+                                        </div>
+                                        <div class="col-2">
+                                            <p>{{ $psng->title }}</p>
+                                            </select>
+                                        </div>
+                                        <div class="col-3">
+                                            <p>{{ $psng->passenger_name }}</p>
+                                        </div>
+                                        <div class="col-3">
+                                            <p>{{ $psng->ticket }}</p>
+                                        </div>
                                     </div>
-                                    <div class="col-2">
-                                        <p>{{ $passenger->type }}</p>
-                                    </div>
-                                    <div class="col-2">
-                                        <p>{{ $passenger->title }}</p>
-                                        </select>
-                                    </div>
-                                    <div class="col-3">
-                                        <p>{{ $passenger->passenger_name }}</p>
-                                    </div>
-                                    <div class="col-3">
-                                        <p>{{ $passenger->ticket }}</p>
+                                </div>
+                                <div class="col-4">
+                                    <div class="row d-flex">
+                                        <div class="col-4">
+                                            <p>{{ $psng->price->value }}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-4">
-                                <div class="row d-flex">
-                                    <div class="col-4">
-                                        <p>{{ $passenger->price->value }}</p>
-                                    </div>
+                                <div class="form-group">
+                                    <label class="label">Remarks</label>
+                                    <p>{{ $psng->remarks }}</p>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label class="label">Remarks</label>
-                                <p>{{ $passenger->remarks }}</p>
                             </div>
-
-                        </div>
+                        @endforeach
                     @endif
                 </div>
             </div>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -44,5 +45,11 @@ class Tabinfo extends Model
     // public function processed_by()
     // {
     //     return $this->belongsTo(User::class, 'processed_by');
+    // }
+
+    // public function getUpdatedAtAttribute($date)
+    // {
+    //     // {Carbon::createFromFormat()
+    //     return Carbon::createFromDate('Y-m-d', $date)->format('Y-m-d');
     // }
 }

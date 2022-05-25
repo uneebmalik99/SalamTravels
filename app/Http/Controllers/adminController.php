@@ -819,6 +819,7 @@ class adminController extends Controller
             $tabinfo = new Tabinfo();
             $tabinfo->user_id = $payment->user_id;
             $tabinfo->tabtype_id = 5;
+            $tabinfo->status_id = 6;
             $tabinfo->processed_by = auth()->user()->id;
             $tabinfo->save();
             $payment->tabinfo_id = $tabinfo->id;
