@@ -1,0 +1,517 @@
+
+endpoints (to get <POP>):
+GET https://ats-api.7koncepts.com/api/endpoints
+***** when calling create for any endpoint below, if you append population=<POP> to the URL, you will see what was created by the system
+
+
+register:
+POST https://ats-api.7koncepts.com/api/auth/local/register
+json payload
+    {
+    	"email": "amit@amit.com",
+    	"password": "12345678",
+    	"username": "asaxena",
+    	"first": "amit",
+    	"last": "saxena",
+    	"agree": true
+    }
+
+
+login:
+POST https://ats-api.7koncepts.com/api/auth/local
+json payload
+    {
+    	"identifier": "amit@amit.com",
+    	"password": "12345678"
+    }
+
+
+dropdowns:
+GET https://ats-api.7koncepts.com/api/about-yourselves
+GET https://ats-api.7koncepts.com/api/countries
+GET https://ats-api.7koncepts.com/api/ethnic-origins
+GET https://ats-api.7koncepts.com/api/experiences
+GET https://ats-api.7koncepts.com/api/languages
+GET https://ats-api.7koncepts.com/api/marital-statuses
+GET https://ats-api.7koncepts.com/api/qualifications
+GET https://ats-api.7koncepts.com/api/religion-beliefs
+GET https://ats-api.7koncepts.com/api/where-did-you-hear-about-uses
+GET https://ats-api.7koncepts.com/api/availability-timings
+GET https://ats-api.7koncepts.com/api/days-of-the-weeks
+GET https://ats-api.7koncepts.com/api/mode-of-travels
+GET https://ats-api.7koncepts.com/api/travel-distances
+GET https://ats-api.7koncepts.com/api/professional-bodys
+GET https://ats-api.7koncepts.com/api/language-fluencies
+GET https://ats-api.7koncepts.com/api/language-types
+GET https://ats-api.7koncepts.com/api/proof-types
+GET https://ats-api.7koncepts.com/api/experience-types
+GET https://ats-api.7koncepts.com/api/criminal-records
+
+
+profile details:
+all: (token required) GET https://ats-api.7koncepts.com/api/profile-details?populate=<POP>
+
+one: (token required) GET https://ats-api.7koncepts.com/api/profile-details?filters[user][id][$eq]=<USER_ID>&populate=<POP>
+
+create: (token required) POST https://ats-api.7koncepts.com/api/profile-details
+[missing photo(media) and cv(media) - please speak to Mir about these 2 fields]
+json payload
+    {
+    "data": {
+   		 "contact_no": "1",
+   		 "home_contact_no": "1",
+   		 "office_contact_no": "1",
+   		 "nationality": "1",
+   		 "place_of_birth": "1",
+   		 "address": "1",
+   		 "town_city": "1",
+   		 "postal_area": "1",
+   		 "region": "1",
+   		 "gender": "1",
+   		 "date_since_uk": "1",
+   		 "since_birth": "1",
+   		 "national_insurance_number": "1",
+   		 "community": "1",
+   		 "facebook": "1",
+   		 "twitter": "1",
+   		 "linkedin": "1",
+   		 "skype": "1",
+   		 "about_yourself": <about-yourselves ID>,
+   		 "country": <countries ID>,
+   		 "ethnic_origin": <ethnic-origins ID>,
+   		 "experience": <experiences ID>,
+   		 "languages": [
+<languages ID>, 
+<languages ID>, 
+<languages ID>
+],
+   		 "marital_status": <marital-statuses ID>,
+   		 "qualification": <qualifications ID>,
+   	 	"religion_belief": <religion-beliefs ID>,
+   	 	"where_did_you_hear_about_us": <where-did-you-hear-about-uses ID>,
+   	 	"user": <USER_ID>
+    	}
+    }
+
+update: (token required) PUT https://ats-api.7koncepts.com/api/profile-details/<PROFILE_DETAILS_ID>
+json payload
+    {
+    	"data": {
+   		 <field_name>: <field_value>
+    	}
+    }
+
+
+profile details availability:
+
+all: (token required) GET https://ats-api.7koncepts.com/api/profile-detail-availabilities?populate=<POP>
+
+one: (token required) GET https://ats-api.7koncepts.com/api/profile-detail-availabilities?filters[user][id][$eq]=<USER_ID>&populate=<POP>
+
+create: (token required) POST https://ats-api.7koncepts.com/api/profile-detail-availabilities
+json payload
+{
+   "data": {
+       "mode_of_travel": <mode-of-travels ID>,
+       "travel_distance": <travel-distances ID>,
+       "availability": [{
+           "is_active": true,
+           "days_of_the_week": <days-of-the-weeks ID>,
+           "timing": [{
+               "from_time": <availability-timings ID>,
+               "to_time": <availability-timings ID>
+           },
+           {
+               "from_time": <availability-timings ID>,
+               "to_time": <availability-timings ID>
+           }]
+       },
+       {
+           "is_active": true,
+           "days_of_the_week": <days-of-the-weeks ID>,
+           "timing": [{
+               "from_time": <availability-timings ID>,
+               "to_time": <availability-timings ID>
+           },
+           {
+               "from_time": <availability-timings ID>,
+               "to_time": <availability-timings ID>
+           }]
+       }],
+       "user": <USER_ID>
+   }
+}
+
+update: (token required) PUT https://ats-api.7koncepts.com/api/profile-detail-availabilities/<PROFILE_DETAILS_AVAILABILITY_ID>
+json payload
+    {
+    	"data": {
+   		 <field_name>: <field_value>
+    	}
+    }
+
+
+profile details training:
+
+all: (token required) GET https://ats-api.7koncepts.com/api/profile-detail-trainings?populate=<POP>
+
+one: (token required) GET https://ats-api.7koncepts.com/api/profile-detail-trainings?filters[user][id][$eq]=<USER_ID>&populate=<POP>
+
+create: (token required) POST https://ats-api.7koncepts.com/api/profile-detail-trainings
+json payload
+{
+   "data": {
+       "training": [{
+               "course_title": "google cert",
+               "training_provider": "google",
+               "from_date": "2022-01-01",
+               "to_date": "2022-01-09",
+               "is_current": true
+           },
+           {
+               "course_title": "ms cert",
+               "training_provider": "ms",
+               "from_date": "2022-01-09",
+               "to_date": "2022-01-15",
+               "is_current": null
+           }],
+       "user": <USER_ID>
+   }
+}
+
+update: (token required) PUT https://ats-api.7koncepts.com/api/profile-detail-trainings/<PROFILE_DETAILS_TRAININGS_ID>
+json payload
+    {
+    	"data": {
+   		 <field_name>: <field_value>
+    	}
+    }
+
+
+profile details qualification:
+
+all: (token required) GET https://ats-api.7koncepts.com/api/profile-detail-qualifications?populate=<POP>
+
+one: (token required) GET https://ats-api.7koncepts.com/api/profile-detail-qualifications?filters[user][id][$eq]=<USER_ID>&populate=<POP>
+
+create: (token required) POST https://ats-api.7koncepts.com/api/profile-detail-qualifications
+json payload
+{
+   "data": {
+       "qualification": [{
+               "qualification": "google cert",
+               "training_provider": "google",
+               "from_date": "2022-01-01",
+               "to_date": "2022-01-09",
+               "is_current": true
+           },
+           {
+               "qualification": "ms cert",
+               "training_provider": "ms",
+               "from_date": "2022-01-09",
+               "to_date": "2022-01-15",
+               "is_current": null
+           }],
+       "user": <USER_ID>
+   }
+}
+
+update: (token required) PUT https://ats-api.7koncepts.com/api/profile-detail-qualifications/<PROFILE_DETAILS_QUALIFICATIONS_ID>
+json payload
+    {
+    	"data": {
+   		 <field_name>: <field_value>
+    	}
+    }
+
+
+profile details membership:
+
+all: (token required) GET https://ats-api.7koncepts.com/api/profile-detail-memberships?populate=<POP>
+
+one: (token required) GET https://ats-api.7koncepts.com/api/profile-detail-memberships?filters[user][id][$eq]=<USER_ID>&populate=<POP>
+
+create: (token required) POST https://ats-api.7koncepts.com/api/profile-detail-memberships
+json payload
+{
+   "data": {
+       "membership": [{
+               "have_membership": true,
+               "type": "type text",
+               "number": "number text",
+               "start": "2022-01-09",
+               "end": "2022-01-25",
+               "professional_body": <professional_body ID>
+           },
+           {
+               "have_membership": true,
+               "type": "type text",
+               "number": "number text",
+               "start": "2022-01-09",
+               "end": "2022-01-25",
+               "professional_body": <professional_body ID>
+           }],
+       "user": <USER_ID>
+   }
+}
+
+update: (token required) PUT https://ats-api.7koncepts.com/api/profile-detail-memberships/<PROFILE_DETAILS_MEMBERSHIPS_ID>
+json payload
+    {
+    	"data": {
+   		 <field_name>: <field_value>
+    	}
+    }
+
+
+profile details languages:
+
+all: (token required) GET https://ats-api.7koncepts.com/api/profile-detail-languages?populate=<POP>
+
+one: (token required) GET https://ats-api.7koncepts.com/api/profile-detail-languages?filters[user][id][$eq]=<USER_ID>&populate=<POP>
+
+create: (token required) POST https://ats-api.7koncepts.com/api/profile-detail-languages
+json payload
+{
+   "data": {
+       "languages": [{
+           "language_type": <language-types ID>,
+           "source_language": <language ID>,
+           "target_language": <language ID>,
+           "language_fluency": <language-fluency ID>,
+           "charges": "10"
+       },{
+           "language_type": <language-types ID>,
+           "source_language": <language ID>,
+           "target_language": <language ID>,
+           "language_fluency": <language-fluency ID>,
+           "charges": "20"
+       }],
+       "user_id": <USER_ID>
+   }
+}
+
+update: (token required) PUT https://ats-api.7koncepts.com/api/profile-detail-languages/<PROFILE_DETAILS_LANGUAGES_ID>
+json payload
+    {
+    	"data": {
+   		 <field_name>: <field_value>
+    	}
+    }
+
+
+security proof of address:
+
+all: (token required) GET https://ats-api.7koncepts.com/api/security-poas?populate=<POP>
+
+one: (token required) GET https://ats-api.7koncepts.com/api/security-poas?filters[user][id][$eq]=<USER_ID>&populate=<POP>
+
+create: (token required) POST https://ats-api.7koncepts.com/api/security-poas
+[missing poa.poa_file(media) - please speak to Mir about this]
+json payload
+{
+   "data": {
+       "poa": [{
+           "issue_date": "<YYYY-MM-DD>",
+           "is_approved": false,
+           "proof_type": <proof-types ID>
+       },{
+           "issue_date": "<YYYY-MM-DD>",
+           "is_approved": false,
+           "proof_type": <proof-types ID>
+       }],
+       "user": <USER_ID>
+   }
+}
+
+update: (token required) PUT https://ats-api.7koncepts.com/api/security-poas/<SECURITY_POAS_ID>
+json payload
+    {
+    	"data": {
+   		 <field_name>: <field_value>
+    	}
+    }
+
+
+security employment history:
+
+all: (token required) GET https://ats-api.7koncepts.com/api/security-ehs?populate=<POP>
+
+one: (token required) GET https://ats-api.7koncepts.com/api/security-ehs?filters[user][id][$eq]=<USER_ID>&populate=<POP>
+
+create: (token required) POST https://ats-api.7koncepts.com/api/security-ehs
+json payload
+{
+   "data": {
+       "eh": [{
+           "employer": "string",
+           "position_held": "string",
+           "date_from": "<YYYY-MM-DD>",
+           "date_to": "<YYYY-MM-DD>",
+           "currently_working": "string",
+           "reason_of_leaving": "string"
+       },{
+           "employer": "string",
+           "position_held": "string",
+           "date_from": "<YYYY-MM-DD>",
+           "date_to": "<YYYY-MM-DD>",
+           "currently_working": "string",
+           "reason_of_leaving": "string"
+       }],
+       "user": <USER_ID>
+   }
+}
+
+update: (token required) PUT https://ats-api.7koncepts.com/api/security-ehs/<SECURITY_EHS_ID>
+json payload
+    {
+    	"data": {
+   		 <field_name>: <field_value>
+    	}
+    }
+
+
+security referee details:
+
+all: (token required) GET https://ats-api.7koncepts.com/api/security-rds?populate=<POP>
+
+one: (token required) GET https://ats-api.7koncepts.com/api/security-rds?filters[user][id][$eq]=<USER_ID>&populate=<POP>
+
+create: (token required) POST https://ats-api.7koncepts.com/api/security-rds
+json payload
+{
+   "data": {
+       "rd": [{
+           "name": "string",
+           "job_title": "string",
+           "email": "string",
+           "organization": "string",
+           "contact_number": "string",
+           "experience_type": <experience-types ID>,
+           "date_from": "<YYYY-MM-DD>",
+           "date_to": "<YYYY-MM-DD>"
+       },{
+           "name": "string",
+           "job_title": "string",
+           "email": "string",
+           "organization": "string",
+           "contact_number": "string",
+           "experience_type": <experience-types ID>,
+           "date_from": "<YYYY-MM-DD>",
+           "date_to": "<YYYY-MM-DD>"
+       }],
+       "user": <USER_ID>
+   }
+}
+
+update: (token required) PUT https://ats-api.7koncepts.com/api/security-rds/<SECURITY_RDS_ID>
+json payload
+    {
+    	"data": {
+   		 <field_name>: <field_value>
+    	}
+    }
+
+
+security employment gap:
+
+all: (token required) GET https://ats-api.7koncepts.com/api/security-egs?populate=<POP>
+
+one: (token required) GET https://ats-api.7koncepts.com/api/security-egs?filters[user][id][$eq]=<USER_ID>&populate=<POP>
+
+create: (token required) POST https://ats-api.7koncepts.com/api/security-egs
+json payload
+{
+   "data": {
+       "eg": [{
+           "reason": "string",
+           "linguist_exp": "string"
+       },{
+           "reason": "string",
+           "linguist_exp": "string"
+       }],
+       "user": <USER_ID>
+   }
+}
+
+update: (token required) PUT https://ats-api.7koncepts.com/api/security-egs/<SECURITY_EGS_ID>
+json payload
+    {
+    	"data": {
+   		 <field_name>: <field_value>
+    	}
+    }
+
+
+security vetting:
+
+all: (token required) GET https://ats-api.7koncepts.com/api/security-svs?populate=<POP>
+
+one: (token required) GET https://ats-api.7koncepts.com/api/security-svs?filters[user][id][$eq]=<USER_ID>&populate=<POP>
+
+create: (token required) POST https://ats-api.7koncepts.com/api/security-svs
+[missing sv.vetting_doc(media) - please speak to Mir about this]
+json payload
+{
+   "data": {
+       "sv": [{
+           "criminal_record": <criminal-records ID>,
+           "date_from": "<YYYY-MM-DD>",
+           "date_to": "<YYYY-MM-DD>",
+           "is_uploaded": "string",
+           "linguist_exp": "string",
+       },{
+           "criminal_record": <criminal-records ID>,
+           "date_from": "<YYYY-MM-DD>",
+           "date_to": "<YYYY-MM-DD>",
+           "is_uploaded": "string",
+           "linguist_exp": "string",
+       }],
+       "user": <USER_ID>
+   }
+}
+
+update: (token required) PUT https://ats-api.7koncepts.com/api/security-svs/<SECURITY_SVS_ID>
+json payload
+    {
+    	"data": {
+   		 <field_name>: <field_value>
+    	}
+    }
+
+
+security right to work options:
+
+all: (token required) GET https://ats-api.7koncepts.com/api/security-rtwos?populate=<POP>
+
+
+security right to work:
+
+
+all: (token required) GET https://ats-api.7koncepts.com/api/security-rtws?populate=<POP>
+
+one: (token required) GET https://ats-api.7koncepts.com/api/security-rtws?filters[user][id][$eq]=<USER_ID>&populate=<POP>
+
+create: (token required) POST https://ats-api.7koncepts.com/api/security-rtws
+[missing rtw.rtw_doc(media) - please speak to Mir about this]
+json payload
+{
+   "data": {
+       "rtw": [{
+           "is_approved": "string",
+           "rtwo_id": "<security-rtwod ID>"
+       },{
+           "is_approved": "string",
+           "rtwo_id": "<security-rtwod ID>"
+       }],
+       "user": <USER_ID>
+   }
+}
+
+update: (token required) PUT https://ats-api.7koncepts.com/api/security-rtws/<SECURITY_RTWS_ID>
+json payload
+    {
+    	"data": {
+   		 <field_name>: <field_value>
+    	}
+    
